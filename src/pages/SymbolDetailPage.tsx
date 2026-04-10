@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import {
+  getEventDigest,
   getEvents,
   getFundamentals,
   getPriceSeries,
@@ -18,6 +19,7 @@ export function SymbolDetailPage() {
   const quote = getQuote(ticker);
   const fundamentals = getFundamentals(ticker);
   const events = getEvents(ticker);
+  const eventDigest = getEventDigest(ticker);
   const sentiment = getSentiment(ticker);
   const trendNarrative = getTrendNarrative(ticker);
 
@@ -36,7 +38,7 @@ export function SymbolDetailPage() {
 
       <div className="detail-grid detail-grid-secondary">
         <FundamentalsPanel fundamentals={fundamentals} />
-        <RelatedEventsPanel events={events} />
+        <RelatedEventsPanel events={events} digest={eventDigest} />
       </div>
     </div>
   );

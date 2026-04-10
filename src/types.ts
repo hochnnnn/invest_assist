@@ -156,10 +156,23 @@ export interface SymbolTrendNarrative {
 
 export type SymbolEventType = "news" | "announcement" | "earnings";
 
+export type SymbolEventImpact = "positive" | "neutral" | "negative";
+
 export interface SymbolEvent {
   id: string;
   titleKey: string;
   type: SymbolEventType;
   timeKey: string;
   noteKey: string;
+  sourceKey: string;
+  impact: SymbolEventImpact;
+  impactNoteKey: string;
+  isToday: boolean;
+}
+
+export interface SymbolEventDigest {
+  ticker: string;
+  summaryKey: string;
+  todayNewsCount: number;
+  latestUpdateKey: string;
 }

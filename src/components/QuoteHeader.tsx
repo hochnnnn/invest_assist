@@ -1,3 +1,4 @@
+import { useI18n } from "../context/SettingsContext";
 import { SymbolQuote } from "../types";
 
 interface QuoteHeaderProps {
@@ -6,15 +7,16 @@ interface QuoteHeaderProps {
 
 export function QuoteHeader({ quote }: QuoteHeaderProps) {
   const isPositive = quote.change >= 0;
+  const { t } = useI18n();
 
   return (
     <section className="quote-header panel">
       <div>
         <p className="eyebrow">{quote.market}</p>
         <div className="quote-title-line">
-          <h2>{quote.name}</h2>
+          <h2>{t(quote.nameKey)}</h2>
           <span>{quote.ticker}</span>
-          <span className="sector-tag">{quote.sector}</span>
+          <span className="sector-tag">{t(quote.sectorKey)}</span>
         </div>
       </div>
       <div className="quote-price-block">
@@ -32,15 +34,15 @@ export function QuoteHeader({ quote }: QuoteHeaderProps) {
       </div>
       <div className="quote-stats-inline">
         <div>
-          <span>成交量</span>
+          <span>{t("quote.volume")}</span>
           <strong>{quote.volume}</strong>
         </div>
         <div>
-          <span>成交额</span>
+          <span>{t("quote.turnover")}</span>
           <strong>{quote.turnover}</strong>
         </div>
         <div>
-          <span>今开</span>
+          <span>{t("quote.open")}</span>
           <strong>{quote.open}</strong>
         </div>
       </div>

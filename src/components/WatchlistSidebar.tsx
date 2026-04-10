@@ -1,3 +1,4 @@
+import { useI18n } from "../context/SettingsContext";
 import { WatchlistGroup, WatchlistItem } from "../types";
 
 interface WatchlistSidebarProps {
@@ -13,25 +14,31 @@ export function WatchlistSidebar({
   activeTicker,
   onSelectTicker,
 }: WatchlistSidebarProps) {
+  const { t } = useI18n();
+
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
         <div className="brand-mark">PM</div>
         <div>
-          <p className="eyebrow">Workspace</p>
-          <h2>自选看板</h2>
+          <p className="eyebrow">{t("sidebar.eyebrow")}</p>
+          <h2>{t("sidebar.title")}</h2>
         </div>
       </div>
 
-      <label className="sidebar-search" aria-label="Watchlist search">
-        <span>Quick find</span>
-        <input placeholder="Add or search..." readOnly aria-label="Add or search" />
+      <label className="sidebar-search" aria-label={t("sidebar.searchLabel")}>
+        <span>{t("sidebar.searchLabel")}</span>
+        <input
+          placeholder={t("sidebar.searchPlaceholder")}
+          readOnly
+          aria-label={t("sidebar.searchPlaceholder")}
+        />
       </label>
 
-      <div className="sidebar-groups" aria-label="Watchlist groups">
+      <div className="sidebar-groups" aria-label={t("sidebar.groups")}>
         {groups.map((group) => (
           <button key={group} type="button" className="group-pill">
-            {group}
+            {t(`watchlist.group.${group}`)}
           </button>
         ))}
       </div>
@@ -50,7 +57,7 @@ export function WatchlistSidebar({
             >
               <div>
                 <strong>{item.ticker}</strong>
-                <span>{item.name}</span>
+                <span>{t(item.nameKey)}</span>
               </div>
               <div className={isPositive ? "price-up" : "price-down"}>
                 <strong>{item.price.toFixed(2)}</strong>

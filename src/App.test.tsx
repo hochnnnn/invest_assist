@@ -173,7 +173,7 @@ describe("Position Manager settings and preferences", () => {
     expect(screen.queryByText("Mon")).not.toBeInTheDocument();
   });
 
-  it("keeps only five market stats in the price trend panel", () => {
+  it("keeps only price and market context stats in the price trend panel", () => {
     setEnglishPreferences();
     renderApp(["/symbol/NVDA"]);
     const chartPanel = screen.getByLabelText("NVDA 1Y chart").closest("section");
@@ -182,9 +182,9 @@ describe("Position Manager settings and preferences", () => {
     expect(within(chartPanel!).getByText("942.38")).toBeInTheDocument();
     expect(within(chartPanel!).getByText("+1.99%")).toBeInTheDocument();
     expect(within(chartPanel!).getByText("$39.6B")).toBeInTheDocument();
-    expect(within(chartPanel!).getByText("Amplitude")).toBeInTheDocument();
-    expect(within(chartPanel!).getByText("Turnover Rate")).toBeInTheDocument();
-    expect(within(chartPanel!).queryByText("42.8M")).not.toBeInTheDocument();
+    expect(within(chartPanel!).getByText("42.8M")).toBeInTheDocument();
+    expect(within(chartPanel!).queryByText("Amplitude")).not.toBeInTheDocument();
+    expect(within(chartPanel!).queryByText("Turnover Rate")).not.toBeInTheDocument();
     expect(within(chartPanel!).queryByText("926.40")).not.toBeInTheDocument();
     expect(within(chartPanel!).queryByText("949.80")).not.toBeInTheDocument();
     expect(within(chartPanel!).queryByText("923.60")).not.toBeInTheDocument();
@@ -238,8 +238,8 @@ describe("Position Manager settings and preferences", () => {
     expect(screen.getByText("Bullish Share")).toBeInTheDocument();
     expect(screen.getByText("Cautious Share")).toBeInTheDocument();
     expect(screen.getByText("Neutral Share")).toBeInTheDocument();
-    expect(screen.getByText("Turnover Rate")).toBeInTheDocument();
     expect(screen.getByText("Latest Price")).toBeInTheDocument();
+    expect(screen.getByText("Volume")).toBeInTheDocument();
     expect(screen.getByText("Trend Read")).toBeInTheDocument();
     expect(screen.getByText("30D Panic Index Trend")).toBeInTheDocument();
     expect(screen.getByText("30 days ago")).toBeInTheDocument();
@@ -300,5 +300,36 @@ describe("Position Manager settings and preferences", () => {
     expect(within(eventList).getByText("Today 09:20")).toBeInTheDocument();
     expect(within(eventList).getByText("May 22")).toBeInTheDocument();
     expect(within(eventList).getByText("This Week")).toBeInTheDocument();
+  });
+
+  it("renders grouped fundamentals sections and keeps valuation metrics inside the fundamentals panel", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/NVDA"]);
+    const fundamentalsPanel = screen
+      .getByRole("heading", { name: "Fundamentals Overview" })
+      .closest("section");
+
+    expect(fundamentalsPanel).not.toBeNull();
+    expect(within(fundamentalsPanel!).getByRole("heading", { name: "Valuation" })).toBeInTheDocument();
+    expect(
+      within(fundamentalsPanel!).getByRole("heading", { name: "Profitability & Growth" }),
+    ).toBeInTheDocument();
+    expect(
+      within(fundamentalsPanel!).getByRole("heading", { name: "Financial Health" }),
+    ).toBeInTheDocument();
+    expect(
+      within(fundamentalsPanel!).getByRole("heading", { name: "Market Expectations" }),
+    ).toBeInTheDocument();
+    expect(within(fundamentalsPanel!).getByText("PE (TTM)")).toBeInTheDocument();
+    expect(within(fundamentalsPanel!).getByText("71.4")).toBeInTheDocument();
+    expect(within(fundamentalsPanel!).getByText("49.8")).toBeInTheDocument();
+  });
+
+  it("shows a compact fallback when expectation data is missing", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/0700.HK"]);
+
+    expect(screen.getByText("Analyst Target")).toBeInTheDocument();
+    expect(screen.getByText("N/A")).toBeInTheDocument();
   });
 });

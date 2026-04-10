@@ -87,14 +87,44 @@ export interface SymbolQuote {
 export interface SymbolFundamentals {
   ticker: string;
   summaryKey: string;
-  industryKey: string;
-  tagKeys: string[];
-  marketCap: string;
-  peRatio: string;
-  pbRatio: string;
-  dividendYield: string;
-  turnoverRate: string;
-  amplitude: string;
+  profile: {
+    industryKey: string;
+    tagKeys: string[];
+    marketCap: string;
+    positioningTagKey: string;
+  };
+  valuation: {
+    valuationTagKey: string;
+    peTtm: string;
+    peForward: string;
+    pbRatio?: string;
+    psRatio?: string;
+    dividendYield: string;
+    valuationPercentile: string;
+  };
+  growth: {
+    revenueGrowth: string;
+    netIncomeGrowth: string;
+    grossMargin: string;
+    roe: string;
+    freeCashFlow: string;
+  };
+  health: {
+    debtRatio?: string;
+    cashBuffer?: string;
+    goodwillRatio?: string;
+    dso?: string;
+  };
+  expectation: {
+    targetPrice?: string;
+    impliedReturn?: string;
+    ratingMix?: string;
+    holderFlow?: string;
+  };
+  trading: {
+    turnoverRate: string;
+    amplitude: string;
+  };
 }
 
 export interface SymbolSentiment {

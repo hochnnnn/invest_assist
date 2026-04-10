@@ -823,14 +823,72 @@ input {
 }
 
 .fundamentals-copy {
-  margin: 0 0 18px;
+  margin: 0;
   color: var(--text-muted);
   line-height: 1.65;
 }
 
-.fundamentals-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.fundamentals-summary-card,
+.fundamentals-section-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  background: var(--surface-strong);
+}
+
+.fundamentals-summary-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
   margin-bottom: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(52, 115, 246, 0.1), transparent 34%),
+    var(--surface-strong);
+}
+
+.fundamentals-summary-meta {
+  display: grid;
+  gap: 6px;
+}
+
+.fundamentals-summary-meta strong,
+.fundamentals-section-heading h3 {
+  font-size: 1.02rem;
+}
+
+.fundamentals-priority-tags {
+  margin-top: 2px;
+}
+
+.tag-pill-accent {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.tag-pill-muted-strong {
+  background: rgba(15, 23, 42, 0.08);
+  color: var(--text-main);
+}
+
+.fundamentals-section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.fundamentals-section-card {
+  padding: 16px;
+}
+
+.fundamentals-section-heading {
+  margin-bottom: 14px;
+}
+
+.fundamentals-section-heading h3 {
+  margin: 0;
+}
+
+.fundamentals-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .tag-row {
@@ -1184,6 +1242,7 @@ input {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .fundamentals-section-grid,
   .sentiment-distribution-stats,
   .sentiment-opinion-columns,
   .sentiment-panic-meta,

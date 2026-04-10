@@ -23,19 +23,19 @@ export function KeyMetricsPanel({
       <div className="metrics-grid">
         <div className="metric-card">
           <span>{t("metrics.amplitude")}</span>
-          <strong>{fundamentals.amplitude}</strong>
+          <strong>{fundamentals.trading.amplitude}</strong>
         </div>
         <div className="metric-card">
           <span>{t("metrics.turnoverRate")}</span>
-          <strong>{fundamentals.turnoverRate}</strong>
+          <strong>{fundamentals.trading.turnoverRate}</strong>
         </div>
         <div className="metric-card">
-          <span>PE</span>
-          <strong>{fundamentals.peRatio}</strong>
+          <span>{t("metrics.open")}</span>
+          <strong>{quote.open}</strong>
         </div>
         <div className="metric-card">
-          <span>PB</span>
-          <strong>{fundamentals.pbRatio}</strong>
+          <span>{t("metrics.previousClose")}</span>
+          <strong>{quote.previousClose}</strong>
         </div>
         <div className="metric-card">
           <span>{t("metrics.high")}</span>

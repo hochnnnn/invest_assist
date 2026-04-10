@@ -1,5 +1,6 @@
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { watchlist } from "../data/mockData";
+import { MarketOverviewProvider } from "../context/MarketOverviewContext";
+import { useMarketOverview } from "../api/useMarketOverview";
 import { SettingsDrawer } from "./SettingsDrawer";
 import { TopBar } from "./TopBar";
 import { WatchlistSidebar } from "./WatchlistSidebar";
@@ -7,19 +8,27 @@ import { WatchlistSidebar } from "./WatchlistSidebar";
 export function AppShell() {
   const navigate = useNavigate();
   const params = useParams();
-  const activeTicker = params.ticker ?? watchlist[0].ticker;
+  const overview = useMarketOverview();
+  const activeTicker =
+    params.ticker ??
+    overview.data?.recentSymbols[0] ??
+    overview.data?.watchlist[0]?.ticker ??
+    "NVDA";
+  const items = overview.data?.watchlist ?? [];
 
   return (
     <div className="app-frame">
       <div className="app-backdrop" />
       <WatchlistSidebar
-        items={watchlist}
+        items={items}
         activeTicker={activeTicker}
         onSelectTicker={(ticker) => navigate(`/symbol/${ticker}`)}
       />
       <main className="workspace">
         <TopBar />
-        <Outlet />
+        <MarketOverviewProvider value={overview}>
+          <Outlet />
+        </MarketOverviewProvider>
       </main>
       <SettingsDrawer />
     </div>

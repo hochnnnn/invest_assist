@@ -3,17 +3,39 @@ import { IndexCardGrid } from "../components/IndexCardGrid";
 import { MacroCalendarPanel } from "../components/MacroCalendarPanel";
 import { MarketPulsePanel } from "../components/MarketPulsePanel";
 import { useI18n } from "../context/SettingsContext";
-import {
-  macroEvents,
-  marketIndexes,
-  marketPulse,
-  recentSymbols,
-  watchlist,
-} from "../data/mockData";
+import { useMarketOverviewContext } from "../context/MarketOverviewContext";
 
 export function MarketOverviewPage() {
   const { t } = useI18n();
-  const focusItems = watchlist.filter((item) => recentSymbols.includes(item.ticker));
+  const { data, loading, error } = useMarketOverviewContext();
+
+  if (loading && !data) {
+    return (
+      <div className="page">
+        <section className="panel">
+          <p>{t("overview.title")}</p>
+          <p>Loading market overview...</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="page">
+        <section className="panel">
+          <p>{t("overview.title")}</p>
+          <p>{error}</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  const focusItems = data.watchlist.filter((item) => data.recentSymbols.includes(item.ticker));
 
   return (
     <div className="page">
@@ -26,20 +48,20 @@ export function MarketOverviewPage() {
         <div className="hero-stats">
           <div>
             <span>{t("overview.trackedSymbols")}</span>
-            <strong>{watchlist.length}</strong>
+            <strong>{data.watchlist.length}</strong>
           </div>
           <div>
             <span>{t("overview.todayEvents")}</span>
-            <strong>{macroEvents.filter((event) => event.dayLabel === "today").length}</strong>
+            <strong>{data.macroEvents.filter((event) => event.dayLabel === "today").length}</strong>
           </div>
         </div>
       </section>
 
-      <IndexCardGrid indexes={marketIndexes} />
+      <IndexCardGrid indexes={data.marketIndexes} />
 
       <div className="overview-grid">
-        <MacroCalendarPanel events={macroEvents} />
-        <MarketPulsePanel pulse={marketPulse} />
+        <MacroCalendarPanel events={data.macroEvents} />
+        <MarketPulsePanel pulse={data.marketPulse} />
       </div>
 
       <FocusListPanel items={focusItems} />

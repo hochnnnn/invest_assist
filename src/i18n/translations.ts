@@ -677,6 +677,106 @@ const translations: Record<AppLanguage, Record<string, string>> = {
   },
 };
 
+const translationOverrides: Partial<Record<AppLanguage, Record<string, string>>> = {
+  "zh-CN": {
+    "fundamentals.eyebrow": "基本面",
+    "fundamentals.section.valuation": "核心估值",
+    "fundamentals.section.growth": "盈利与成长",
+    "fundamentals.section.health": "财务健康",
+    "fundamentals.section.expectation": "市场预期",
+    "fundamentals.peTtm": "PE (TTM)",
+    "fundamentals.peForward": "Forward PE",
+    "fundamentals.relativeValuation": "PB / PS",
+    "fundamentals.valuationPercentile": "5年估值分位",
+    "fundamentals.revenueGrowth": "营收增长",
+    "fundamentals.netIncomeGrowth": "净利润增长",
+    "fundamentals.grossMargin": "毛利率",
+    "fundamentals.roe": "ROE",
+    "fundamentals.freeCashFlow": "自由现金流",
+    "fundamentals.debtRatio": "资产负债率",
+    "fundamentals.cashBuffer": "现金缓冲",
+    "fundamentals.goodwillRatio": "商誉占比",
+    "fundamentals.dso": "应收周转天数",
+    "fundamentals.targetPrice": "分析师目标价",
+    "fundamentals.impliedReturn": "隐含空间",
+    "fundamentals.ratingMix": "评级分布",
+    "fundamentals.holderFlow": "机构持仓动向",
+    "fundamentals.notAvailable": "暂无",
+    "fundamentals.positioning.aiInfrastructure": "AI 基础设施龙头",
+    "fundamentals.positioning.platformCompounder": "平台型复利资产",
+    "fundamentals.positioning.ecosystemCashflow": "生态现金流核心",
+    "fundamentals.positioning.internetRecovery": "互联网修复资产",
+    "fundamentals.positioning.premiumConsumer": "高端消费护城河",
+    "fundamentals.valuationTag.premium": "估值溢价仍高",
+    "fundamentals.valuationTag.qualityPremium": "质量溢价可接受",
+    "fundamentals.valuationTag.reasonable": "估值回到合理区间",
+    "fundamentals.valuationTag.defensiveIncome": "防御分红属性明确",
+    "metrics.eyebrow": "交易指标",
+    "metrics.title": "交易指标",
+    "metrics.open": "今开",
+    "metrics.previousClose": "昨收",
+    "fundamental.nvda.summary": "AI 算力需求仍在兑现，增长强、现金流厚，但估值已经处在高位定价区间。",
+    "fundamental.msft.summary": "云与企业 AI 提供稳定现金流，盈利质量扎实，当前更像高质量溢价资产。",
+    "fundamental.aapl.summary": "硬件换机弹性有限，但生态与服务现金流稳固，估值仍建立在高质量预期上。",
+    "fundamental.tencent.summary": "游戏和广告修复继续兑现，现金流改善明确，估值回升后仍处于相对合理区间。",
+    "fundamental.moutai.summary": "品牌护城河和现金回报仍强，盈利韧性突出，更偏防御型高质量消费资产。",
+  },
+  "en-US": {
+    "fundamentals.eyebrow": "Fundamentals",
+    "fundamentals.section.valuation": "Valuation",
+    "fundamentals.section.growth": "Profitability & Growth",
+    "fundamentals.section.health": "Financial Health",
+    "fundamentals.section.expectation": "Market Expectations",
+    "fundamentals.peTtm": "PE (TTM)",
+    "fundamentals.peForward": "Forward PE",
+    "fundamentals.relativeValuation": "PB / PS",
+    "fundamentals.valuationPercentile": "5Y Valuation Band",
+    "fundamentals.revenueGrowth": "Revenue Growth",
+    "fundamentals.netIncomeGrowth": "Net Income Growth",
+    "fundamentals.grossMargin": "Gross Margin",
+    "fundamentals.roe": "ROE",
+    "fundamentals.freeCashFlow": "Free Cash Flow",
+    "fundamentals.debtRatio": "Debt Ratio",
+    "fundamentals.cashBuffer": "Cash Buffer",
+    "fundamentals.goodwillRatio": "Goodwill Ratio",
+    "fundamentals.dso": "Receivables Days",
+    "fundamentals.targetPrice": "Analyst Target",
+    "fundamentals.impliedReturn": "Implied Return",
+    "fundamentals.ratingMix": "Rating Mix",
+    "fundamentals.holderFlow": "Holder Flow",
+    "fundamentals.notAvailable": "N/A",
+    "fundamentals.positioning.aiInfrastructure": "AI Infrastructure Leader",
+    "fundamentals.positioning.platformCompounder": "Platform Compounder",
+    "fundamentals.positioning.ecosystemCashflow": "Ecosystem Cash Engine",
+    "fundamentals.positioning.internetRecovery": "Internet Recovery",
+    "fundamentals.positioning.premiumConsumer": "Premium Consumer Moat",
+    "fundamentals.valuationTag.premium": "Premium valuation still in force",
+    "fundamentals.valuationTag.qualityPremium": "Quality premium remains supported",
+    "fundamentals.valuationTag.reasonable": "Valuation back in a fair range",
+    "fundamentals.valuationTag.defensiveIncome": "Defensive yield support remains visible",
+    "metrics.eyebrow": "Trading Tape",
+    "metrics.title": "Trading Metrics",
+    "metrics.open": "Open",
+    "metrics.previousClose": "Prev Close",
+    "fundamental.nvda.summary":
+      "AI infrastructure demand is still compounding fast, backed by strong cash generation, but the stock already trades inside a premium zone.",
+    "fundamental.msft.summary":
+      "Cloud and enterprise AI keep the cash engine durable, making this a quality compounder with premium but still defendable pricing.",
+    "fundamental.aapl.summary":
+      "Hardware growth is steadier than explosive, while the ecosystem and services mix keep cash flow resilient enough to justify a premium setup.",
+    "fundamental.tencent.summary":
+      "Gaming and advertising recovery are translating into cleaner cash generation, while valuation still screens closer to reasonable than stretched.",
+    "fundamental.moutai.summary":
+      "Brand moat, pricing power, and cash returns remain intact, leaving the stock positioned as a defensive quality compounder.",
+  },
+};
+
 export function translate(language: AppLanguage, key: string): string {
-  return translations[language][key] ?? translations["en-US"][key] ?? key;
+  return (
+    translationOverrides[language]?.[key] ??
+    translations[language][key] ??
+    translationOverrides["en-US"]?.[key] ??
+    translations["en-US"][key] ??
+    key
+  );
 }

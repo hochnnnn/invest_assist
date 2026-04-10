@@ -1,3 +1,4 @@
+import { useI18n } from "../context/SettingsContext";
 import { MacroEvent } from "../types";
 
 interface MacroCalendarPanelProps {
@@ -5,16 +6,16 @@ interface MacroCalendarPanelProps {
 }
 
 export function MacroCalendarPanel({ events }: MacroCalendarPanelProps) {
+  const { t } = useI18n();
+
   return (
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Calendar</p>
-          <h2>宏观日历</h2>
+          <p className="eyebrow">{t("calendar.eyebrow")}</p>
+          <h2>{t("calendar.title")}</h2>
         </div>
-        <span className="panel-caption">
-          Today and this week, sorted for awareness rather than depth.
-        </span>
+        <span className="panel-caption">{t("calendar.caption")}</span>
       </div>
 
       <div className="calendar-list">
@@ -22,14 +23,14 @@ export function MacroCalendarPanel({ events }: MacroCalendarPanelProps) {
           <article key={event.id} className="calendar-item">
             <div className="calendar-time">
               <strong>{event.time}</strong>
-              <span>{event.dayLabel}</span>
+              <span>{t(`calendar.day.${event.dayLabel}`)}</span>
             </div>
             <div className="calendar-content">
-              <h3>{event.title}</h3>
+              <h3>{t(event.titleKey)}</h3>
               <p>{event.market}</p>
             </div>
-            <span className={`importance-pill importance-${event.importance.toLowerCase()}`}>
-              {event.importance}
+            <span className={`importance-pill importance-${event.importance}`}>
+              {t(`calendar.importance.${event.importance}`)}
             </span>
           </article>
         ))}

@@ -1,26 +1,41 @@
+import { useSettings } from "../context/SettingsContext";
+
 export function TopBar() {
+  const { isSettingsOpen, openSettings, t } = useSettings();
+
   return (
     <header className="topbar">
       <div>
-        <p className="eyebrow">Market Console</p>
-        <h1>Position Manager</h1>
+        <p className="eyebrow">{t("app.eyebrow")}</p>
+        <h1>{t("app.title")}</h1>
       </div>
       <div className="topbar-meta">
         <div className="status-chip">
           <span className="status-dot" />
-          Asia session mixed
+          {t("topbar.status")}
         </div>
         <label className="search-shell" aria-label="Global search shell">
-          <span>Search</span>
+          <span>{t("topbar.searchLabel")}</span>
           <input
             type="text"
-            placeholder="Search ticker or company"
+            placeholder={t("topbar.searchPlaceholder")}
             readOnly
-            aria-label="Search ticker or company"
+            aria-label={t("topbar.searchPlaceholder")}
           />
         </label>
+        <button
+          type="button"
+          className="settings-trigger"
+          data-testid="settings-open"
+          aria-haspopup="dialog"
+          aria-expanded={isSettingsOpen}
+          aria-label={t("topbar.settings")}
+          onClick={openSettings}
+        >
+          {t("topbar.settings")}
+        </button>
         <div className="clock-card">
-          <span>UTC+8</span>
+          <span>{t("topbar.timezone")}</span>
           <strong>15:42</strong>
         </div>
       </div>

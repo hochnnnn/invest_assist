@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useI18n } from "../context/SettingsContext";
 import { WatchlistItem } from "../types";
 
 interface FocusListPanelProps {
@@ -7,17 +8,16 @@ interface FocusListPanelProps {
 
 export function FocusListPanel({ items }: FocusListPanelProps) {
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   return (
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Watchlist</p>
-          <h2>关注标的</h2>
+          <p className="eyebrow">{t("focus.eyebrow")}</p>
+          <h2>{t("focus.title")}</h2>
         </div>
-        <span className="panel-caption">
-          Jump directly into a detail view from the market dashboard.
-        </span>
+        <span className="panel-caption">{t("focus.caption")}</span>
       </div>
       <div className="focus-list">
         {items.map((item) => (
@@ -28,7 +28,7 @@ export function FocusListPanel({ items }: FocusListPanelProps) {
             onClick={() => navigate(`/symbol/${item.ticker}`)}
           >
             <div>
-              <strong>{item.name}</strong>
+              <strong>{t(item.nameKey)}</strong>
               <span>{item.ticker}</span>
             </div>
             <div className={item.change >= 0 ? "price-up" : "price-down"}>

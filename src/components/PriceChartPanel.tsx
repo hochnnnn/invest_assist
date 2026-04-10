@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useI18n } from "../context/SettingsContext";
 import { PriceSeriesPeriod, PriceSeriesPoint, SymbolQuote } from "../types";
 
 interface PriceChartPanelProps {
@@ -10,6 +11,7 @@ const periods: PriceSeriesPeriod[] = ["1D", "1W", "1M"];
 
 export function PriceChartPanel({ quote, getSeries }: PriceChartPanelProps) {
   const [period, setPeriod] = useState<PriceSeriesPeriod>("1D");
+  const { t } = useI18n();
   const series = getSeries(period);
 
   const chartPath = useMemo(() => {
@@ -33,10 +35,10 @@ export function PriceChartPanel({ quote, getSeries }: PriceChartPanelProps) {
     <section className="panel chart-panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Price Action</p>
-          <h2>价格走势</h2>
+          <p className="eyebrow">{t("chart.eyebrow")}</p>
+          <h2>{t("chart.title")}</h2>
         </div>
-        <div className="period-switcher" role="tablist" aria-label="Chart period switcher">
+        <div className="period-switcher" role="tablist" aria-label={t("chart.periodSwitcher")}>
           {periods.map((option) => (
             <button
               key={option}
@@ -53,12 +55,12 @@ export function PriceChartPanel({ quote, getSeries }: PriceChartPanelProps) {
 
       <div className="chart-shell">
         <div className="chart-summary">
-          <span>Current range</span>
+          <span>{t("chart.range")}</span>
           <strong>
             {series[0].value.toFixed(2)} - {series[series.length - 1].value.toFixed(2)}
           </strong>
           <p className={isPositive ? "price-up" : "price-down"}>
-            {isPositive ? "Trend holding above prior close" : "Price trading below prior close"}
+            {isPositive ? t("chart.aboveClose") : t("chart.belowClose")}
           </p>
         </div>
         <svg viewBox="0 0 100 100" aria-label={`${quote.ticker} ${period} chart`}>

@@ -1,3 +1,4 @@
+import { useI18n } from "../context/SettingsContext";
 import { MarketIndexSnapshot } from "../types";
 
 interface IndexCardGridProps {
@@ -5,16 +6,16 @@ interface IndexCardGridProps {
 }
 
 export function IndexCardGrid({ indexes }: IndexCardGridProps) {
+  const { t } = useI18n();
+
   return (
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Macro Pulse</p>
-          <h2>主要指数</h2>
+          <p className="eyebrow">{t("indexes.eyebrow")}</p>
+          <h2>{t("indexes.title")}</h2>
         </div>
-        <span className="panel-caption">
-          Track broad market direction before drilling into symbols.
-        </span>
+        <span className="panel-caption">{t("indexes.caption")}</span>
       </div>
       <div className="index-grid">
         {indexes.map((index) => {
@@ -24,7 +25,7 @@ export function IndexCardGrid({ indexes }: IndexCardGridProps) {
             <article key={index.code} className="index-card">
               <div className="index-card-header">
                 <div>
-                  <h3>{index.name}</h3>
+                  <h3>{t(index.nameKey)}</h3>
                   <span>{index.code}</span>
                 </div>
                 <span className="region-badge">{index.region}</span>
@@ -40,7 +41,7 @@ export function IndexCardGrid({ indexes }: IndexCardGridProps) {
                   {index.changePercent.toFixed(2)}%
                 </span>
               </div>
-              <p>{index.sessionLabel}</p>
+              <p>{t(index.sessionLabelKey)}</p>
             </article>
           );
         })}

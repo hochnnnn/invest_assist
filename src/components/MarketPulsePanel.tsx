@@ -1,43 +1,42 @@
+import { useI18n } from "../context/SettingsContext";
+import { MarketPulse } from "../types";
+
 interface MarketPulsePanelProps {
-  pulse: {
-    advancers: number;
-    decliners: number;
-    turnover: string;
-    riskMood: string;
-    hotTheme: string;
-  };
+  pulse: MarketPulse;
 }
 
 export function MarketPulsePanel({ pulse }: MarketPulsePanelProps) {
+  const { t } = useI18n();
+
   return (
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Breadth</p>
-          <h2>市场温度</h2>
+          <p className="eyebrow">{t("pulse.eyebrow")}</p>
+          <h2>{t("pulse.title")}</h2>
         </div>
       </div>
       <div className="pulse-grid">
         <div className="metric-card">
-          <span>上涨家数</span>
+          <span>{t("pulse.advancers")}</span>
           <strong>{pulse.advancers}</strong>
         </div>
         <div className="metric-card">
-          <span>下跌家数</span>
+          <span>{t("pulse.decliners")}</span>
           <strong>{pulse.decliners}</strong>
         </div>
         <div className="metric-card">
-          <span>成交额</span>
+          <span>{t("pulse.turnover")}</span>
           <strong>{pulse.turnover}</strong>
         </div>
         <div className="metric-card">
-          <span>风险偏好</span>
-          <strong>{pulse.riskMood}</strong>
+          <span>{t("pulse.riskMood")}</span>
+          <strong>{t(pulse.riskMoodKey)}</strong>
         </div>
       </div>
       <div className="pulse-banner">
-        <span>Hot Theme</span>
-        <strong>{pulse.hotTheme}</strong>
+        <span>{t("pulse.hotTheme")}</span>
+        <strong>{t(pulse.hotThemeKey)}</strong>
       </div>
     </section>
   );

@@ -1,13 +1,31 @@
 // @vitest-environment node
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  macroEvents,
+  marketIndexes,
+  marketPulse,
+  recentSymbols,
+  watchlist,
+} from "../src/data/mockData";
+import { MarketOverviewUnavailableError } from "./marketOverviewService";
 import { apiServiceName, buildApiServer } from "./server";
 
 describe("api server", () => {
   let app: ReturnType<typeof buildApiServer> | undefined;
 
   beforeEach(() => {
-    app = buildApiServer();
+    app = buildApiServer({
+      marketOverviewService: {
+        getMarketOverview: async () => ({
+          watchlist,
+          marketIndexes,
+          macroEvents,
+          marketPulse,
+          recentSymbols,
+        }),
+      },
+    });
   });
 
   afterEach(async () => {
@@ -39,17 +57,37 @@ describe("api server", () => {
     const body = response.json() as {
       watchlist: Array<{ ticker: string }>;
       marketIndexes: Array<{ code: string }>;
-      macroEvents: Array<{ id: string }>;
+      macroEvents: Array<{ id: string; market: string }>;
       marketPulse: { turnover: string };
       recentSymbols: string[];
     };
 
-    expect(body.watchlist).toHaveLength(5);
+    expect(body.watchlist).toHaveLength(3);
     expect(body.watchlist[0]).toMatchObject({ ticker: "NVDA" });
     expect(body.marketIndexes).toHaveLength(5);
     expect(body.macroEvents).toHaveLength(4);
-    expect(body.marketPulse.turnover).toBe("¥1.14T");
-    expect(body.recentSymbols).toEqual(["NVDA", "MSFT", "0700.HK", "600519.SH"]);
+    expect(body.macroEvents.every((event) => event.market === "US")).toBe(true);
+    expect(body.marketPulse.turnover).toBe("$328.4B");
+    expect(body.recentSymbols).toEqual(["NVDA", "MSFT", "AAPL"]);
+  });
+
+  it("returns a 502 when the overview service has no usable snapshot", async () => {
+    await app?.close();
+    app = buildApiServer({
+      marketOverviewService: {
+        getMarketOverview: async () => {
+          throw new MarketOverviewUnavailableError("Yahoo temporarily unavailable");
+        },
+      },
+    });
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/market/overview",
+    });
+
+    expect(response.statusCode).toBe(502);
+    expect(response.body).toContain("Yahoo temporarily unavailable");
   });
 
   it("serves symbol details and falls back to NVDA for unknown tickers", async () => {

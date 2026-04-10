@@ -161,9 +161,9 @@ describe("Position Manager settings and preferences", () => {
     const user = userEvent.setup();
     await renderApp(["/"]);
 
-    await user.click(screen.getAllByRole("button", { name: /0700\.HK/i })[0]);
+    await user.click(screen.getAllByRole("button", { name: /AAPL/i })[0]);
 
-    expect(await screen.findByLabelText("0700.HK 1Y chart")).toBeInTheDocument();
+    expect(await screen.findByLabelText("AAPL 1Y chart")).toBeInTheDocument();
   });
 
   it("switches the active ticker from the persistent watchlist", async () => {

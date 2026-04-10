@@ -293,7 +293,11 @@ input {
 .event-card p,
 .calendar-content p,
 .quote-stats-inline span,
+.chart-stat-item span,
 .fundamentals-grid span,
+.sentiment-summary-card span,
+.sentiment-topics > span,
+.sentiment-score-block span,
 .settings-list span,
 .subscription-card-header span,
 .settings-copy,
@@ -602,9 +606,7 @@ input {
 }
 
 .quote-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 18px;
+  display: flex;
   align-items: center;
 }
 
@@ -617,12 +619,6 @@ input {
 
 .quote-title-line span {
   color: var(--text-muted);
-}
-
-.quote-price-block strong {
-  font-size: 2.2rem;
-  line-height: 1;
-  margin-bottom: 10px;
 }
 
 .quote-stats-inline {
@@ -656,17 +652,47 @@ input {
   gap: 14px;
 }
 
+.chart-stat-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.chart-stat-item,
+.sentiment-summary-card,
+.sentiment-index-card {
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-strong);
+  border: 1px solid var(--card-border);
+}
+
+.chart-stat-item {
+  display: grid;
+  gap: 8px;
+}
+
+.chart-stat-item strong {
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+
+.chart-stat-item strong,
+.sentiment-index-card strong,
+.sentiment-score-block strong {
+  display: block;
+}
+
 .chart-summary {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
+  display: grid;
+  gap: 8px;
   color: var(--text-muted);
 }
 
-.chart-summary strong {
+.chart-summary p {
+  margin: 0;
   color: var(--text-main);
-  font-size: 1.12rem;
+  line-height: 1.6;
 }
 
 .chart-line {
@@ -719,6 +745,63 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.sentiment-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.sentiment-summary-card {
+  display: grid;
+  gap: 10px;
+}
+
+.sentiment-summary-card p {
+  margin: 0;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.sentiment-index-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.sentiment-score-block {
+  display: grid;
+  gap: 6px;
+  text-align: right;
+}
+
+.sentiment-score-block strong {
+  font-size: 1.85rem;
+  line-height: 1;
+}
+
+.sentiment-meter {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--accent-soft);
+}
+
+.sentiment-meter-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f0b44c 0%, #2bb881 100%);
+}
+
+.sentiment-topics {
+  display: grid;
+  gap: 12px;
+}
+
+.sentiment-tag {
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .tag-pill {
@@ -891,11 +974,16 @@ input {
   .hero-banner,
   .topbar,
   .quote-stats-inline,
+  .sentiment-index-card,
   .topbar-meta,
   .referral-shell,
   .settings-row,
   .panel-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .chart-stat-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

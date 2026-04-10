@@ -4,9 +4,11 @@ import {
   getFundamentals,
   getPriceSeries,
   getQuote,
+  getSentiment,
+  getTrendNarrative,
 } from "../data/mockData";
+import { CommunitySentimentPanel } from "../components/CommunitySentimentPanel";
 import { FundamentalsPanel } from "../components/FundamentalsPanel";
-import { KeyMetricsPanel } from "../components/KeyMetricsPanel";
 import { PriceChartPanel } from "../components/PriceChartPanel";
 import { QuoteHeader } from "../components/QuoteHeader";
 import { RelatedEventsPanel } from "../components/RelatedEventsPanel";
@@ -16,6 +18,8 @@ export function SymbolDetailPage() {
   const quote = getQuote(ticker);
   const fundamentals = getFundamentals(ticker);
   const events = getEvents(ticker);
+  const sentiment = getSentiment(ticker);
+  const trendNarrative = getTrendNarrative(ticker);
 
   return (
     <div className="page">
@@ -24,9 +28,11 @@ export function SymbolDetailPage() {
       <div className="detail-grid">
         <PriceChartPanel
           quote={quote}
-          getSeries={(period) => getPriceSeries(quote.ticker, period)}
+          fundamentals={fundamentals}
+          trendNarrative={trendNarrative}
+          getSeries={() => getPriceSeries(quote.ticker)}
         />
-        <KeyMetricsPanel quote={quote} fundamentals={fundamentals} />
+        <CommunitySentimentPanel sentiment={sentiment} />
       </div>
 
       <div className="detail-grid detail-grid-secondary">

@@ -68,8 +68,6 @@ export interface PriceSeriesPoint {
   value: number;
 }
 
-export type PriceSeriesPeriod = "1D" | "1W" | "1M";
-
 export interface SymbolQuote {
   ticker: string;
   nameKey: string;
@@ -97,6 +95,20 @@ export interface SymbolFundamentals {
   dividendYield: string;
   turnoverRate: string;
   amplitude: string;
+}
+
+export interface SymbolSentiment {
+  ticker: string;
+  summaryKey: string;
+  fearGreedLabelKey: string;
+  fearGreedScore: number;
+  trendLabelKey: string;
+  topicKeys: string[];
+}
+
+export interface SymbolTrendNarrative {
+  ticker: string;
+  trendSummaryKey: string;
 }
 
 export type SymbolEventType = "news" | "announcement" | "earnings";

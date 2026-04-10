@@ -6,7 +6,6 @@ interface QuoteHeaderProps {
 }
 
 export function QuoteHeader({ quote }: QuoteHeaderProps) {
-  const isPositive = quote.change >= 0;
   const { t } = useI18n();
 
   return (
@@ -17,33 +16,6 @@ export function QuoteHeader({ quote }: QuoteHeaderProps) {
           <h2>{t(quote.nameKey)}</h2>
           <span>{quote.ticker}</span>
           <span className="sector-tag">{t(quote.sectorKey)}</span>
-        </div>
-      </div>
-      <div className="quote-price-block">
-        <strong>{quote.price.toFixed(2)}</strong>
-        <div className={isPositive ? "price-up" : "price-down"}>
-          <span>
-            {isPositive ? "+" : ""}
-            {quote.change.toFixed(2)}
-          </span>
-          <span>
-            {isPositive ? "+" : ""}
-            {quote.changePercent.toFixed(2)}%
-          </span>
-        </div>
-      </div>
-      <div className="quote-stats-inline">
-        <div>
-          <span>{t("quote.volume")}</span>
-          <strong>{quote.volume}</strong>
-        </div>
-        <div>
-          <span>{t("quote.turnover")}</span>
-          <strong>{quote.turnover}</strong>
-        </div>
-        <div>
-          <span>{t("quote.open")}</span>
-          <strong>{quote.open}</strong>
         </div>
       </div>
     </section>

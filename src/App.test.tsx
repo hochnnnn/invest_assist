@@ -206,11 +206,19 @@ describe("Position Manager settings and preferences", () => {
     setEnglishPreferences();
     renderApp(["/symbol/MSFT"]);
 
-    expect(screen.getByText("54")).toBeInTheDocument();
-    expect(screen.getByText("Azure capacity pacing")).toBeInTheDocument();
+    expect(screen.getByText("Divided Bias")).toBeInTheDocument();
+    expect(screen.getByText("37%")).toBeInTheDocument();
+    expect(screen.getByText("52")).toBeInTheDocument();
+    expect(screen.getByText("-1")).toBeInTheDocument();
+    expect(screen.getByText("Bullish Views")).toBeInTheDocument();
+    expect(screen.getByText("Bearish Views")).toBeInTheDocument();
     expect(
-      screen.getByText(/enterprise AI monetization converts/i),
+      screen.getByText(/Azure capacity pacing are still debated/i),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/waiting for a cleaner catalyst/i),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("MSFT 30D Panic Index Trend")).toBeInTheDocument();
   });
 
   it("translates the sentiment panel and market stats labels", async () => {
@@ -221,11 +229,34 @@ describe("Position Manager settings and preferences", () => {
     await user.selectOptions(screen.getByTestId("settings-language-select"), "en-US");
 
     expect(screen.getByRole("heading", { name: "Community Sentiment" })).toBeInTheDocument();
-    expect(screen.getByText("Market Risk Index")).toBeInTheDocument();
+    expect(screen.getByText("Overall Sentiment")).toBeInTheDocument();
+    expect(screen.getByText("Positioning Breakdown")).toBeInTheDocument();
+    expect(screen.getByText("Stock Panic Index")).toBeInTheDocument();
+    expect(screen.getByText("Latest Score")).toBeInTheDocument();
+    expect(screen.getByText("Daily Change")).toBeInTheDocument();
+    expect(screen.getByText("Panic State")).toBeInTheDocument();
+    expect(screen.getByText("Bullish Share")).toBeInTheDocument();
+    expect(screen.getByText("Cautious Share")).toBeInTheDocument();
+    expect(screen.getByText("Neutral Share")).toBeInTheDocument();
     expect(screen.getByText("Turnover Rate")).toBeInTheDocument();
     expect(screen.getByText("Latest Price")).toBeInTheDocument();
     expect(screen.getByText("Trend Read")).toBeInTheDocument();
-    expect(screen.getByText("AI demand durability")).toBeInTheDocument();
+    expect(screen.getByText("30D Panic Index Trend")).toBeInTheDocument();
+    expect(screen.getByText("30 days ago")).toBeInTheDocument();
+    expect(screen.getByText("Today")).toBeInTheDocument();
+  });
+
+  it("renders three bullish and three bearish sentiment views", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/NVDA"]);
+
+    expect(screen.getAllByRole("listitem")).toHaveLength(6);
+    expect(
+      screen.getByText(/AI capex is still expanding/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/valuation already prices in several quarters/i),
+    ).toBeInTheDocument();
   });
 
   it("renders ticker-specific trend narrative copy", () => {

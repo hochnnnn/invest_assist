@@ -99,11 +99,24 @@ export interface SymbolFundamentals {
 
 export interface SymbolSentiment {
   ticker: string;
-  summaryKey: string;
-  fearGreedLabelKey: string;
-  fearGreedScore: number;
-  trendLabelKey: string;
-  topicKeys: string[];
+  overall: {
+    stanceKey: string;
+    evidenceKey: string;
+  };
+  distribution: {
+    bullishPercent: number;
+    cautiousPercent: number;
+    neutralPercent: number;
+    bullishViewKeys: string[];
+    bearishViewKeys: string[];
+  };
+  panic: {
+    score: number;
+    dailyChange: number;
+    stateKey: string;
+    reasonKey: string;
+    history: PriceSeriesPoint[];
+  };
 }
 
 export interface SymbolTrendNarrative {

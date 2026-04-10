@@ -541,6 +541,53 @@ input {
   gap: 12px;
 }
 
+.events-digest-card {
+  margin-bottom: 14px;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at top right, rgba(52, 115, 246, 0.12), transparent 36%),
+    var(--surface-strong);
+  border: 1px solid var(--card-border);
+}
+
+.events-digest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.events-digest-header h3 {
+  margin: 0;
+}
+
+.events-digest-copy {
+  margin: 0 0 14px;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.events-digest-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.events-digest-stats div {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.28);
+  border: 1px solid var(--card-border);
+}
+
+.events-digest-stats strong {
+  font-size: 1.12rem;
+}
+
 .calendar-item,
 .focus-row {
   display: flex;
@@ -561,6 +608,47 @@ input {
 .calendar-content h3,
 .event-card h3 {
   margin: 0 0 6px;
+}
+
+.event-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.event-source {
+  color: var(--text-soft);
+  font-size: 0.84rem;
+}
+
+.impact-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+}
+
+.impact-positive {
+  background: rgba(17, 128, 95, 0.12);
+  color: var(--success);
+}
+
+.impact-neutral {
+  background: var(--low-soft);
+  color: var(--text-muted);
+}
+
+.impact-negative {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.event-impact-note {
+  margin: 12px 0 0;
+  color: var(--text-main);
+  line-height: 1.5;
 }
 
 .importance-pill {
@@ -1098,7 +1186,8 @@ input {
 
   .sentiment-distribution-stats,
   .sentiment-opinion-columns,
-  .sentiment-panic-meta {
+  .sentiment-panic-meta,
+  .events-digest-stats {
     grid-template-columns: 1fr;
   }
 

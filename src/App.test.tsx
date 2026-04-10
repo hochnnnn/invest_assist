@@ -244,6 +244,10 @@ describe("Position Manager settings and preferences", () => {
     expect(screen.getByText("30D Panic Index Trend")).toBeInTheDocument();
     expect(screen.getByText("30 days ago")).toBeInTheDocument();
     expect(screen.getByText("Today")).toBeInTheDocument();
+    expect(screen.getByText("Today News Brief")).toBeInTheDocument();
+    expect(screen.getByText("Today's News")).toBeInTheDocument();
+    expect(screen.getByText("Latest Update")).toBeInTheDocument();
+    expect(screen.getAllByText("Positive").length).toBeGreaterThan(0);
   });
 
   it("renders three bullish and three bearish sentiment views", () => {
@@ -267,5 +271,34 @@ describe("Position Manager settings and preferences", () => {
     expect(
       screen.getByText(/pullback entries read better than chasing strength/i),
     ).toBeInTheDocument();
+  });
+
+  it("renders an event digest and five related events for the symbol page", () => {
+    setEnglishPreferences();
+    const { container } = renderApp(["/symbol/NVDA"]);
+
+    const digest = screen.getByTestId("events-digest");
+
+    expect(digest).toBeInTheDocument();
+    expect(
+      screen.getByText(/Today's NVDA flow is still centered on AI server demand/i),
+    ).toBeInTheDocument();
+    expect(within(digest).getByText("3")).toBeInTheDocument();
+    expect(container.querySelectorAll(".event-card")).toHaveLength(5);
+    expect(screen.getByText("Hyperscalers continue lifting AI server purchase expectations")).toBeInTheDocument();
+    expect(screen.getByText(/Persistent demand strength supports another round/i)).toBeInTheDocument();
+  });
+
+  it("fills the event rail with upcoming catalysts after today's news", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/NVDA"]);
+
+    const eventList = screen.getByTestId("related-events-list");
+
+    expect(within(eventList).getByText("Today 14:10")).toBeInTheDocument();
+    expect(within(eventList).getByText("Today 11:40")).toBeInTheDocument();
+    expect(within(eventList).getByText("Today 09:20")).toBeInTheDocument();
+    expect(within(eventList).getByText("May 22")).toBeInTheDocument();
+    expect(within(eventList).getByText("This Week")).toBeInTheDocument();
   });
 });

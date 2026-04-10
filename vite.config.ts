@@ -1,15 +1,17 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 
+const localServerConfig = {
+  host: "127.0.0.1",
+  port: 5173,
+};
+
 export default defineConfig({
   plugins: [react()],
-  server: {
-    port: 3000,
-    strictPort: true,
-  },
+  server: localServerConfig,
   preview: {
-    port: 3000,
-    strictPort: true,
+    host: "127.0.0.1",
+    port: 4173,
   },
   test: {
     environment: "jsdom",

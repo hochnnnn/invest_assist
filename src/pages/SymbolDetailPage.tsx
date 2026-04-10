@@ -28,7 +28,6 @@ export function SymbolDetailPage() {
       <div className="detail-grid">
         <PriceChartPanel
           quote={quote}
-          fundamentals={fundamentals}
           trendNarrative={trendNarrative}
           getSeries={() => getPriceSeries(quote.ticker)}
         />

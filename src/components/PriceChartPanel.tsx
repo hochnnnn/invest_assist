@@ -1,22 +1,15 @@
 import { useMemo } from "react";
 import { useI18n } from "../context/SettingsContext";
-import {
-  PriceSeriesPoint,
-  SymbolFundamentals,
-  SymbolQuote,
-  SymbolTrendNarrative,
-} from "../types";
+import { PriceSeriesPoint, SymbolQuote, SymbolTrendNarrative } from "../types";
 
 interface PriceChartPanelProps {
   quote: SymbolQuote;
-  fundamentals: SymbolFundamentals;
   trendNarrative: SymbolTrendNarrative;
   getSeries: () => PriceSeriesPoint[];
 }
 
 export function PriceChartPanel({
   quote,
-  fundamentals,
   trendNarrative,
   getSeries,
 }: PriceChartPanelProps) {
@@ -47,8 +40,7 @@ export function PriceChartPanel({
       tone: isPositive ? "price-up" : "price-down",
     },
     { label: t("quote.turnover"), value: quote.turnover },
-    { label: t("quote.amplitude"), value: fundamentals.amplitude },
-    { label: t("quote.turnoverRate"), value: fundamentals.turnoverRate },
+    { label: t("quote.volume"), value: quote.volume },
   ];
 
   return (

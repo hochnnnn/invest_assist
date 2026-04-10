@@ -7,12 +7,12 @@ import {
   getQuote,
   getSentiment,
   getTrendNarrative,
-  macroEvents,
-  marketIndexes,
-  marketPulse,
-  recentSymbols,
-  watchlist,
 } from "../src/data/mockData";
+import {
+  defaultMarketOverviewService,
+  MarketOverviewUnavailableError,
+  type MarketOverviewService,
+} from "./marketOverviewService";
 import type {
   HealthResponse,
   MarketOverviewResponse,
@@ -21,7 +21,11 @@ import type {
 
 export const apiServiceName = "invest-assist-api";
 
-export function buildApiServer() {
+export function buildApiServer({
+  marketOverviewService = defaultMarketOverviewService,
+}: {
+  marketOverviewService?: MarketOverviewService;
+} = {}) {
   const app = Fastify({
     logger: false,
   });
@@ -32,13 +36,23 @@ export function buildApiServer() {
     uptime: process.uptime(),
   }));
 
-  app.get<{ Reply: MarketOverviewResponse }>("/api/market/overview", async () => ({
-    watchlist,
-    marketIndexes,
-    macroEvents,
-    marketPulse,
-    recentSymbols,
-  }));
+  app.get<{ Reply: MarketOverviewResponse | string }>(
+    "/api/market/overview",
+    async (_request, reply) => {
+      try {
+        return await marketOverviewService.getMarketOverview();
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to load market overview from Yahoo Finance";
+        const statusCode =
+          error instanceof MarketOverviewUnavailableError ? error.statusCode : 502;
+
+        return reply.code(statusCode).type("text/plain; charset=utf-8").send(message);
+      }
+    },
+  );
 
   app.get<{ Params: { ticker: string }; Reply: SymbolDetailResponse }>(
     "/api/symbols/:ticker",

@@ -5,8 +5,8 @@ import { vi } from "vitest";
 import App from "./App";
 import { referralConfig } from "./data/settingsMockData";
 
-function renderApp(initialEntries: string[]) {
-  return render(
+async function renderApp(initialEntries: string[]) {
+  const result = render(
     <MemoryRouter
       initialEntries={initialEntries}
       future={{
@@ -17,6 +17,18 @@ function renderApp(initialEntries: string[]) {
       <App />
     </MemoryRouter>,
   );
+
+  if (initialEntries[0]?.startsWith("/symbol/")) {
+    const ticker = initialEntries[0].split("/").pop();
+
+    if (ticker) {
+      await screen.findByLabelText(`${ticker} 1Y chart`);
+    }
+  } else {
+    await screen.findByRole("heading", { name: /关注标的|Watchlist/ });
+  }
+
+  return result;
 }
 
 function setEnglishPreferences() {
@@ -37,17 +49,17 @@ describe("Position Manager settings and preferences", () => {
     });
   });
 
-  it("renders the market overview page and settings entry", () => {
-    renderApp(["/"]);
+  it("renders the market overview page and settings entry", async () => {
+    await renderApp(["/"]);
 
     expect(screen.getByTestId("settings-open")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /NVDA/i }).length).toBeGreaterThan(0);
     expect(screen.getByText("15:42")).toBeInTheDocument();
   });
 
-  it("renders the symbol detail page from the ticker route", () => {
+  it("renders the symbol detail page from the ticker route", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/MSFT"]);
+    await renderApp(["/symbol/MSFT"]);
 
     expect(screen.getByLabelText("MSFT 1Y chart")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "1W" })).not.toBeInTheDocument();
@@ -57,7 +69,7 @@ describe("Position Manager settings and preferences", () => {
 
   it("opens the settings drawer and closes it with the keyboard", async () => {
     const user = userEvent.setup();
-    renderApp(["/"]);
+    await renderApp(["/"]);
 
     await user.click(screen.getByTestId("settings-open"));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -68,7 +80,7 @@ describe("Position Manager settings and preferences", () => {
 
   it("keeps the settings first screen compact by default", async () => {
     const user = userEvent.setup();
-    renderApp(["/"]);
+    await renderApp(["/"]);
 
     await user.click(screen.getByTestId("settings-open"));
 
@@ -80,7 +92,7 @@ describe("Position Manager settings and preferences", () => {
 
   it("switches language across the app and persists the choice", async () => {
     const user = userEvent.setup();
-    const firstRender = renderApp(["/"]);
+    const firstRender = await renderApp(["/"]);
 
     await user.click(screen.getByTestId("settings-open"));
     await user.selectOptions(screen.getByTestId("settings-language-select"), "en-US");
@@ -90,7 +102,7 @@ describe("Position Manager settings and preferences", () => {
     expect(screen.getByRole("dialog", { name: "Settings" })).toBeInTheDocument();
 
     firstRender.unmount();
-    renderApp(["/"]);
+    await renderApp(["/"]);
 
     expect(screen.getByRole("heading", { name: "Major Indexes" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Watchlist" })).toBeInTheDocument();
@@ -98,7 +110,7 @@ describe("Position Manager settings and preferences", () => {
 
   it("switches theme and restores it from localStorage", async () => {
     const user = userEvent.setup();
-    const firstRender = renderApp(["/"]);
+    const firstRender = await renderApp(["/"]);
 
     expect(document.documentElement.dataset.theme).toBe("light");
 
@@ -108,14 +120,14 @@ describe("Position Manager settings and preferences", () => {
     expect(document.documentElement.dataset.theme).toBe("dark");
 
     firstRender.unmount();
-    renderApp(["/"]);
+    await renderApp(["/"]);
 
     expect(document.documentElement.dataset.theme).toBe("dark");
   });
 
   it("expands subscription management inline and keeps the selected plan summary", async () => {
     const user = userEvent.setup();
-    renderApp(["/"]);
+    await renderApp(["/"]);
 
     await user.click(screen.getByTestId("settings-open"));
     await user.selectOptions(screen.getByTestId("settings-language-select"), "en-US");
@@ -135,7 +147,7 @@ describe("Position Manager settings and preferences", () => {
 
   it("copies the referral link without rendering the raw url", async () => {
     const user = userEvent.setup();
-    renderApp(["/"]);
+    await renderApp(["/"]);
 
     await user.click(screen.getByTestId("settings-open"));
     await user.selectOptions(screen.getByTestId("settings-language-select"), "en-US");
@@ -147,7 +159,7 @@ describe("Position Manager settings and preferences", () => {
 
   it("navigates from the overview focus list into a symbol detail page", async () => {
     const user = userEvent.setup();
-    renderApp(["/"]);
+    await renderApp(["/"]);
 
     await user.click(screen.getAllByRole("button", { name: /0700\.HK/i })[0]);
 
@@ -156,16 +168,16 @@ describe("Position Manager settings and preferences", () => {
 
   it("switches the active ticker from the persistent watchlist", async () => {
     const user = userEvent.setup();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
 
     await user.click(screen.getByRole("button", { name: /MSFT/i }));
 
     expect(await screen.findByLabelText("MSFT 1Y chart")).toBeInTheDocument();
   });
 
-  it("renders a fixed one-year chart with monthly labels", () => {
+  it("renders a fixed one-year chart with monthly labels", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
 
     expect(screen.getByLabelText("NVDA 1Y chart")).toBeInTheDocument();
     expect(screen.getByText("Jun")).toBeInTheDocument();
@@ -173,9 +185,9 @@ describe("Position Manager settings and preferences", () => {
     expect(screen.queryByText("Mon")).not.toBeInTheDocument();
   });
 
-  it("keeps only price and market context stats in the price trend panel", () => {
+  it("keeps only price and market context stats in the price trend panel", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
     const chartPanel = screen.getByLabelText("NVDA 1Y chart").closest("section");
 
     expect(chartPanel).not.toBeNull();
@@ -190,9 +202,9 @@ describe("Position Manager settings and preferences", () => {
     expect(within(chartPanel!).queryByText("923.60")).not.toBeInTheDocument();
   });
 
-  it("removes duplicated price and change from the quote header", () => {
+  it("removes duplicated price and change from the quote header", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
     const quoteHeader = screen.getByText("NASDAQ").closest("section");
 
     expect(quoteHeader).not.toBeNull();
@@ -202,9 +214,9 @@ describe("Position Manager settings and preferences", () => {
     expect(within(quoteHeader!).queryByText("+1.99%")).not.toBeInTheDocument();
   });
 
-  it("renders ticker-specific sentiment content", () => {
+  it("renders ticker-specific sentiment content", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/MSFT"]);
+    await renderApp(["/symbol/MSFT"]);
 
     expect(screen.getByText("Divided Bias")).toBeInTheDocument();
     expect(screen.getByText("37%")).toBeInTheDocument();
@@ -223,7 +235,7 @@ describe("Position Manager settings and preferences", () => {
 
   it("translates the sentiment panel and market stats labels", async () => {
     const user = userEvent.setup();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
 
     await user.click(screen.getByTestId("settings-open"));
     await user.selectOptions(screen.getByTestId("settings-language-select"), "en-US");
@@ -250,9 +262,9 @@ describe("Position Manager settings and preferences", () => {
     expect(screen.getAllByText("Positive").length).toBeGreaterThan(0);
   });
 
-  it("renders three bullish and three bearish sentiment views", () => {
+  it("renders three bullish and three bearish sentiment views", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
 
     expect(screen.getAllByRole("listitem")).toHaveLength(6);
     expect(
@@ -263,9 +275,9 @@ describe("Position Manager settings and preferences", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders ticker-specific trend narrative copy", () => {
+  it("renders ticker-specific trend narrative copy", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/MSFT"]);
+    await renderApp(["/symbol/MSFT"]);
 
     expect(screen.getByText("Trend Read")).toBeInTheDocument();
     expect(
@@ -273,9 +285,9 @@ describe("Position Manager settings and preferences", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders an event digest and five related events for the symbol page", () => {
+  it("renders an event digest and five related events for the symbol page", async () => {
     setEnglishPreferences();
-    const { container } = renderApp(["/symbol/NVDA"]);
+    const { container } = await renderApp(["/symbol/NVDA"]);
 
     const digest = screen.getByTestId("events-digest");
 
@@ -289,9 +301,9 @@ describe("Position Manager settings and preferences", () => {
     expect(screen.getByText(/Persistent demand strength supports another round/i)).toBeInTheDocument();
   });
 
-  it("fills the event rail with upcoming catalysts after today's news", () => {
+  it("fills the event rail with upcoming catalysts after today's news", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
 
     const eventList = screen.getByTestId("related-events-list");
 
@@ -302,9 +314,9 @@ describe("Position Manager settings and preferences", () => {
     expect(within(eventList).getByText("This Week")).toBeInTheDocument();
   });
 
-  it("renders grouped fundamentals sections and keeps valuation metrics inside the fundamentals panel", () => {
+  it("renders grouped fundamentals sections and keeps valuation metrics inside the fundamentals panel", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/NVDA"]);
+    await renderApp(["/symbol/NVDA"]);
     const fundamentalsPanel = screen
       .getByRole("heading", { name: "Fundamentals Overview" })
       .closest("section");
@@ -325,9 +337,9 @@ describe("Position Manager settings and preferences", () => {
     expect(within(fundamentalsPanel!).getByText("49.8")).toBeInTheDocument();
   });
 
-  it("shows a compact fallback when expectation data is missing", () => {
+  it("shows a compact fallback when expectation data is missing", async () => {
     setEnglishPreferences();
-    renderApp(["/symbol/0700.HK"]);
+    await renderApp(["/symbol/0700.HK"]);
 
     expect(screen.getByText("Analyst Target")).toBeInTheDocument();
     expect(screen.getByText("N/A")).toBeInTheDocument();

@@ -54,6 +54,10 @@ const translations: Record<AppLanguage, Record<string, string>> = {
     "quote.volume": "成交量",
     "quote.turnover": "成交额",
     "quote.open": "今开",
+    "quote.high": "最高",
+    "quote.low": "最低",
+    "quote.amplitude": "振幅",
+    "quote.turnoverRate": "换手率",
 
     "chart.eyebrow": "价格走势",
     "chart.title": "价格走势",
@@ -61,6 +65,9 @@ const translations: Record<AppLanguage, Record<string, string>> = {
     "chart.aboveClose": "走势仍在昨收之上",
     "chart.belowClose": "价格运行在昨收之下",
     "chart.periodSwitcher": "图表周期切换器",
+    "chart.latestPrice": "最新价",
+    "chart.changePercent": "涨跌幅",
+    "chart.trendSummaryLabel": "走势解读",
 
     "fundamentals.eyebrow": "基本面",
     "fundamentals.title": "基本面概览",
@@ -74,6 +81,21 @@ const translations: Record<AppLanguage, Record<string, string>> = {
     "metrics.turnoverRate": "换手率",
     "metrics.high": "最高",
     "metrics.low": "最低",
+
+    "sentiment.eyebrow": "社区情绪",
+    "sentiment.title": "社区情绪",
+    "sentiment.summaryLabel": "讨论摘要",
+    "sentiment.fearGreed": "市场风险指数",
+    "sentiment.hotTopics": "热门话题",
+    "sentiment.fearGreed.greedy": "偏贪婪",
+    "sentiment.fearGreed.neutral": "中性",
+    "sentiment.fearGreed.cautious": "偏谨慎",
+    "sentiment.fearGreed.steady": "稳健偏多",
+    "sentiment.trend.callBuying": "看多讨论仍占上风",
+    "sentiment.trend.waitingGuidance": "讨论聚焦后续指引",
+    "sentiment.trend.mixedViews": "多空观点仍偏分化",
+    "sentiment.trend.recoveryWatch": "情绪修复仍待确认",
+    "sentiment.trend.defensivePreference": "防御偏好继续占优",
 
     "events.eyebrow": "事件流",
     "events.title": "相关事件",
@@ -150,6 +172,44 @@ const translations: Record<AppLanguage, Record<string, string>> = {
 
     "market.riskPositive": "偏积极",
     "market.hotThemeCompute": "算力与半导体",
+
+    "chart.trendSummary.nvda":
+      "近一年大部分时间维持高位震荡，几次明显回撤都在更高的平台附近止跌，说明资金仍在围绕主线反复承接。",
+    "chart.trendSummary.msft":
+      "过去一年先跌后稳，年底附近形成阶段低点后缓慢修复，更适合等回踩确认而不是追短线拉升。",
+    "chart.trendSummary.aapl":
+      "一年走势偏平缓，下探后的修复节奏比较克制，局部低点主要出现在需求担忧集中释放的阶段。",
+    "chart.trendSummary.tencent":
+      "近一年整体是震荡筑底后的弱修复，买点更偏向回落到箱体下沿时的风险收益比改善。",
+    "chart.trendSummary.moutai":
+      "过去一年先回撤后企稳，低位区间承接相对清晰，更适合在情绪回落但趋势未破坏时寻找介入点。",
+
+    "sentiment.nvda.summary":
+      "公开讨论仍围绕 AI 服务器需求强度展开，整体情绪偏乐观，但对高估值的分歧开始放大。",
+    "sentiment.msft.summary":
+      "市场更关注企业 AI 商业化兑现节奏，情绪保持中性偏稳，等待新的云业务指引。",
+    "sentiment.aapl.summary":
+      "公开讨论集中在换机周期与中国区需求，情绪偏谨慎，更多资金把它视作防守而非进攻。",
+    "sentiment.tencent.summary":
+      "讨论焦点落在游戏新品与广告恢复，情绪较前期改善，但仍需要业绩验证持续性。",
+    "sentiment.moutai.summary":
+      "社区讨论以渠道库存和节日动销为主，整体偏稳，红利与防御属性仍是共识基础。",
+
+    "sentiment.topic.aiDemand": "AI 需求延续",
+    "sentiment.topic.dataCenterCapex": "数据中心资本开支",
+    "sentiment.topic.valuationDebate": "高估值分歧",
+    "sentiment.topic.enterpriseAI": "企业 AI 变现",
+    "sentiment.topic.azureCapacity": "Azure 产能节奏",
+    "sentiment.topic.marginDiscipline": "利润率纪律",
+    "sentiment.topic.iphoneCycle": "iPhone 换机周期",
+    "sentiment.topic.servicesMix": "服务业务占比",
+    "sentiment.topic.chinaDemand": "中国区需求",
+    "sentiment.topic.gamingPipeline": "游戏产品线",
+    "sentiment.topic.adRecovery": "广告修复节奏",
+    "sentiment.topic.buybackSupport": "回购支撑",
+    "sentiment.topic.channelInventory": "渠道库存",
+    "sentiment.topic.festivalDemand": "节日动销",
+    "sentiment.topic.dividendExpectations": "分红预期",
 
     "fundamental.nvda.summary":
       "AI 加速卡需求仍是核心增长引擎，数据中心与软件附加率持续扩张。",
@@ -266,6 +326,10 @@ const translations: Record<AppLanguage, Record<string, string>> = {
     "quote.volume": "Volume",
     "quote.turnover": "Turnover",
     "quote.open": "Open",
+    "quote.high": "High",
+    "quote.low": "Low",
+    "quote.amplitude": "Amplitude",
+    "quote.turnoverRate": "Turnover Rate",
 
     "chart.eyebrow": "Price Action",
     "chart.title": "Price Trend",
@@ -273,6 +337,9 @@ const translations: Record<AppLanguage, Record<string, string>> = {
     "chart.aboveClose": "Trend holding above prior close",
     "chart.belowClose": "Price trading below prior close",
     "chart.periodSwitcher": "Chart period switcher",
+    "chart.latestPrice": "Latest Price",
+    "chart.changePercent": "Change",
+    "chart.trendSummaryLabel": "Trend Read",
 
     "fundamentals.eyebrow": "Profile",
     "fundamentals.title": "Fundamentals Overview",
@@ -286,6 +353,21 @@ const translations: Record<AppLanguage, Record<string, string>> = {
     "metrics.turnoverRate": "Turnover Rate",
     "metrics.high": "High",
     "metrics.low": "Low",
+
+    "sentiment.eyebrow": "Community Signal",
+    "sentiment.title": "Community Sentiment",
+    "sentiment.summaryLabel": "Discussion Summary",
+    "sentiment.fearGreed": "Market Risk Index",
+    "sentiment.hotTopics": "Hot Topics",
+    "sentiment.fearGreed.greedy": "Greedy",
+    "sentiment.fearGreed.neutral": "Neutral",
+    "sentiment.fearGreed.cautious": "Cautious",
+    "sentiment.fearGreed.steady": "Steady Bullish",
+    "sentiment.trend.callBuying": "Bullish call flow remains in control",
+    "sentiment.trend.waitingGuidance": "Discussion is waiting for fresh guidance",
+    "sentiment.trend.mixedViews": "Views remain split across the tape",
+    "sentiment.trend.recoveryWatch": "Recovery sentiment still needs confirmation",
+    "sentiment.trend.defensivePreference": "Defensive preference stays in control",
 
     "events.eyebrow": "Event Rail",
     "events.title": "Related Events",
@@ -362,6 +444,44 @@ const translations: Record<AppLanguage, Record<string, string>> = {
 
     "market.riskPositive": "Risk-on bias",
     "market.hotThemeCompute": "Compute and semiconductors",
+
+    "chart.trendSummary.nvda":
+      "The past year stayed in a high trading range, and each visible pullback found support on a higher shelf, suggesting buyers are still defending the main AI trend.",
+    "chart.trendSummary.msft":
+      "The one-year move is a drop followed by a steadier repair, with the clearest low forming around year-end, so pullback entries read better than chasing strength.",
+    "chart.trendSummary.aapl":
+      "The yearly path is flatter and more controlled, with local lows tending to appear when demand concerns peak and then fade.",
+    "chart.trendSummary.tencent":
+      "The last year looks like base-building followed by a mild recovery, with the better entry setup coming when price drifts back toward the lower end of the range.",
+    "chart.trendSummary.moutai":
+      "The stock spent the year correcting first and stabilizing later, with clearer support in the lower band, making emotional pullbacks more interesting than breakouts.",
+
+    "sentiment.nvda.summary":
+      "Public discussion is still centered on AI server demand strength, with an optimistic tilt but widening debate around valuation.",
+    "sentiment.msft.summary":
+      "The market is focused on how quickly enterprise AI monetization converts, keeping sentiment balanced while investors wait for new cloud guidance.",
+    "sentiment.aapl.summary":
+      "Discussion clusters around the handset refresh cycle and China demand, leaving sentiment cautious and more defensive than aggressive.",
+    "sentiment.tencent.summary":
+      "Conversation has improved around gaming launches and ad recovery, but conviction still depends on follow-through in results.",
+    "sentiment.moutai.summary":
+      "Community chatter is centered on channel inventory and holiday sell-through, with dividend and defensive qualities still anchoring sentiment.",
+
+    "sentiment.topic.aiDemand": "AI demand durability",
+    "sentiment.topic.dataCenterCapex": "Data-center capex",
+    "sentiment.topic.valuationDebate": "Valuation debate",
+    "sentiment.topic.enterpriseAI": "Enterprise AI monetization",
+    "sentiment.topic.azureCapacity": "Azure capacity pacing",
+    "sentiment.topic.marginDiscipline": "Margin discipline",
+    "sentiment.topic.iphoneCycle": "iPhone refresh cycle",
+    "sentiment.topic.servicesMix": "Services mix",
+    "sentiment.topic.chinaDemand": "China demand",
+    "sentiment.topic.gamingPipeline": "Gaming pipeline",
+    "sentiment.topic.adRecovery": "Ad recovery pace",
+    "sentiment.topic.buybackSupport": "Buyback support",
+    "sentiment.topic.channelInventory": "Channel inventory",
+    "sentiment.topic.festivalDemand": "Holiday demand",
+    "sentiment.topic.dividendExpectations": "Dividend expectations",
 
     "fundamental.nvda.summary":
       "AI accelerator demand remains the core growth engine, while data center and software attach rates continue to expand.",

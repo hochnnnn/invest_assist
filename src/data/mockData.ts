@@ -2,11 +2,12 @@ import {
   MacroEvent,
   MarketIndexSnapshot,
   MarketPulse,
-  PriceSeriesPeriod,
   PriceSeriesPoint,
   SymbolEvent,
   SymbolFundamentals,
   SymbolQuote,
+  SymbolSentiment,
+  SymbolTrendNarrative,
   WatchlistItem,
 } from "../types";
 
@@ -292,6 +293,92 @@ const fundamentalsMap: Record<string, SymbolFundamentals> = {
   },
 };
 
+const sentimentMap: Record<string, SymbolSentiment> = {
+  NVDA: {
+    ticker: "NVDA",
+    summaryKey: "sentiment.nvda.summary",
+    fearGreedLabelKey: "sentiment.fearGreed.greedy",
+    fearGreedScore: 72,
+    trendLabelKey: "sentiment.trend.callBuying",
+    topicKeys: [
+      "sentiment.topic.aiDemand",
+      "sentiment.topic.dataCenterCapex",
+      "sentiment.topic.valuationDebate",
+    ],
+  },
+  MSFT: {
+    ticker: "MSFT",
+    summaryKey: "sentiment.msft.summary",
+    fearGreedLabelKey: "sentiment.fearGreed.neutral",
+    fearGreedScore: 54,
+    trendLabelKey: "sentiment.trend.waitingGuidance",
+    topicKeys: [
+      "sentiment.topic.enterpriseAI",
+      "sentiment.topic.azureCapacity",
+      "sentiment.topic.marginDiscipline",
+    ],
+  },
+  AAPL: {
+    ticker: "AAPL",
+    summaryKey: "sentiment.aapl.summary",
+    fearGreedLabelKey: "sentiment.fearGreed.cautious",
+    fearGreedScore: 43,
+    trendLabelKey: "sentiment.trend.mixedViews",
+    topicKeys: [
+      "sentiment.topic.iphoneCycle",
+      "sentiment.topic.servicesMix",
+      "sentiment.topic.chinaDemand",
+    ],
+  },
+  "0700.HK": {
+    ticker: "0700.HK",
+    summaryKey: "sentiment.tencent.summary",
+    fearGreedLabelKey: "sentiment.fearGreed.neutral",
+    fearGreedScore: 50,
+    trendLabelKey: "sentiment.trend.recoveryWatch",
+    topicKeys: [
+      "sentiment.topic.gamingPipeline",
+      "sentiment.topic.adRecovery",
+      "sentiment.topic.buybackSupport",
+    ],
+  },
+  "600519.SH": {
+    ticker: "600519.SH",
+    summaryKey: "sentiment.moutai.summary",
+    fearGreedLabelKey: "sentiment.fearGreed.steady",
+    fearGreedScore: 61,
+    trendLabelKey: "sentiment.trend.defensivePreference",
+    topicKeys: [
+      "sentiment.topic.channelInventory",
+      "sentiment.topic.festivalDemand",
+      "sentiment.topic.dividendExpectations",
+    ],
+  },
+};
+
+const trendNarrativeMap: Record<string, SymbolTrendNarrative> = {
+  NVDA: {
+    ticker: "NVDA",
+    trendSummaryKey: "chart.trendSummary.nvda",
+  },
+  MSFT: {
+    ticker: "MSFT",
+    trendSummaryKey: "chart.trendSummary.msft",
+  },
+  AAPL: {
+    ticker: "AAPL",
+    trendSummaryKey: "chart.trendSummary.aapl",
+  },
+  "0700.HK": {
+    ticker: "0700.HK",
+    trendSummaryKey: "chart.trendSummary.tencent",
+  },
+  "600519.SH": {
+    ticker: "600519.SH",
+    trendSummaryKey: "chart.trendSummary.moutai",
+  },
+};
+
 const eventsMap: Record<string, SymbolEvent[]> = {
   NVDA: [
     {
@@ -375,127 +462,77 @@ const eventsMap: Record<string, SymbolEvent[]> = {
   ],
 };
 
-const priceSeriesMap: Record<string, Record<PriceSeriesPeriod, PriceSeriesPoint[]>> = {
-  NVDA: {
-    "1D": [
-      { label: "09:30", value: 926 },
-      { label: "10:30", value: 931 },
-      { label: "11:30", value: 936 },
-      { label: "13:00", value: 932 },
-      { label: "14:30", value: 941 },
-      { label: "16:00", value: 942 },
-    ],
-    "1W": [
-      { label: "Mon", value: 901 },
-      { label: "Tue", value: 915 },
-      { label: "Wed", value: 924 },
-      { label: "Thu", value: 938 },
-      { label: "Fri", value: 942 },
-    ],
-    "1M": [
-      { label: "W1", value: 865 },
-      { label: "W2", value: 882 },
-      { label: "W3", value: 913 },
-      { label: "W4", value: 928 },
-      { label: "Now", value: 942 },
-    ],
-  },
-  MSFT: {
-    "1D": [
-      { label: "09:30", value: 425 },
-      { label: "10:30", value: 423 },
-      { label: "11:30", value: 422 },
-      { label: "13:00", value: 421 },
-      { label: "14:30", value: 420 },
-      { label: "16:00", value: 421 },
-    ],
-    "1W": [
-      { label: "Mon", value: 431 },
-      { label: "Tue", value: 428 },
-      { label: "Wed", value: 425 },
-      { label: "Thu", value: 423 },
-      { label: "Fri", value: 421 },
-    ],
-    "1M": [
-      { label: "W1", value: 438 },
-      { label: "W2", value: 432 },
-      { label: "W3", value: 429 },
-      { label: "W4", value: 424 },
-      { label: "Now", value: 421 },
-    ],
-  },
-  AAPL: {
-    "1D": [
-      { label: "09:30", value: 197.5 },
-      { label: "10:30", value: 198.2 },
-      { label: "11:30", value: 198.6 },
-      { label: "13:00", value: 198.4 },
-      { label: "14:30", value: 198.8 },
-      { label: "16:00", value: 198.7 },
-    ],
-    "1W": [
-      { label: "Mon", value: 193.2 },
-      { label: "Tue", value: 195.1 },
-      { label: "Wed", value: 196.8 },
-      { label: "Thu", value: 197.4 },
-      { label: "Fri", value: 198.7 },
-    ],
-    "1M": [
-      { label: "W1", value: 188.4 },
-      { label: "W2", value: 191.7 },
-      { label: "W3", value: 194.8 },
-      { label: "W4", value: 197.5 },
-      { label: "Now", value: 198.7 },
-    ],
-  },
-  "0700.HK": {
-    "1D": [
-      { label: "09:30", value: 320.1 },
-      { label: "10:30", value: 319.7 },
-      { label: "11:30", value: 318.9 },
-      { label: "13:00", value: 317.8 },
-      { label: "14:30", value: 318.5 },
-      { label: "16:00", value: 318.2 },
-    ],
-    "1W": [
-      { label: "Mon", value: 325.5 },
-      { label: "Tue", value: 323.1 },
-      { label: "Wed", value: 321.6 },
-      { label: "Thu", value: 319.5 },
-      { label: "Fri", value: 318.2 },
-    ],
-    "1M": [
-      { label: "W1", value: 334.2 },
-      { label: "W2", value: 329.8 },
-      { label: "W3", value: 324.4 },
-      { label: "W4", value: 320.6 },
-      { label: "Now", value: 318.2 },
-    ],
-  },
-  "600519.SH": {
-    "1D": [
-      { label: "09:30", value: 1718 },
-      { label: "10:30", value: 1726 },
-      { label: "11:30", value: 1731 },
-      { label: "13:00", value: 1729 },
-      { label: "14:30", value: 1734 },
-      { label: "15:00", value: 1736 },
-    ],
-    "1W": [
-      { label: "Mon", value: 1692 },
-      { label: "Tue", value: 1704 },
-      { label: "Wed", value: 1715 },
-      { label: "Thu", value: 1728 },
-      { label: "Fri", value: 1736 },
-    ],
-    "1M": [
-      { label: "W1", value: 1658 },
-      { label: "W2", value: 1682 },
-      { label: "W3", value: 1706 },
-      { label: "W4", value: 1721 },
-      { label: "Now", value: 1736 },
-    ],
-  },
+const priceSeriesMap: Record<string, PriceSeriesPoint[]> = {
+  NVDA: [
+    { label: "Jun", value: 1180 },
+    { label: "Jul", value: 1115 },
+    { label: "Aug", value: 1048 },
+    { label: "Sep", value: 968 },
+    { label: "Oct", value: 895 },
+    { label: "Nov", value: 918 },
+    { label: "Dec", value: 884 },
+    { label: "Jan", value: 902 },
+    { label: "Feb", value: 948 },
+    { label: "Mar", value: 926 },
+    { label: "Apr", value: 958 },
+    { label: "May", value: 942 },
+  ],
+  MSFT: [
+    { label: "Jun", value: 456 },
+    { label: "Jul", value: 449 },
+    { label: "Aug", value: 438 },
+    { label: "Sep", value: 431 },
+    { label: "Oct", value: 417 },
+    { label: "Nov", value: 409 },
+    { label: "Dec", value: 398 },
+    { label: "Jan", value: 405 },
+    { label: "Feb", value: 413 },
+    { label: "Mar", value: 427 },
+    { label: "Apr", value: 418 },
+    { label: "May", value: 421 },
+  ],
+  AAPL: [
+    { label: "Jun", value: 213 },
+    { label: "Jul", value: 209 },
+    { label: "Aug", value: 203 },
+    { label: "Sep", value: 196 },
+    { label: "Oct", value: 189 },
+    { label: "Nov", value: 184 },
+    { label: "Dec", value: 187 },
+    { label: "Jan", value: 191 },
+    { label: "Feb", value: 195 },
+    { label: "Mar", value: 199 },
+    { label: "Apr", value: 201 },
+    { label: "May", value: 198.7 },
+  ],
+  "0700.HK": [
+    { label: "Jun", value: 356 },
+    { label: "Jul", value: 348 },
+    { label: "Aug", value: 338 },
+    { label: "Sep", value: 331 },
+    { label: "Oct", value: 322 },
+    { label: "Nov", value: 312 },
+    { label: "Dec", value: 305 },
+    { label: "Jan", value: 309 },
+    { label: "Feb", value: 314 },
+    { label: "Mar", value: 321 },
+    { label: "Apr", value: 316 },
+    { label: "May", value: 318.2 },
+  ],
+  "600519.SH": [
+    { label: "Jun", value: 1888 },
+    { label: "Jul", value: 1856 },
+    { label: "Aug", value: 1812 },
+    { label: "Sep", value: 1768 },
+    { label: "Oct", value: 1706 },
+    { label: "Nov", value: 1662 },
+    { label: "Dec", value: 1648 },
+    { label: "Jan", value: 1672 },
+    { label: "Feb", value: 1708 },
+    { label: "Mar", value: 1726 },
+    { label: "Apr", value: 1743 },
+    { label: "May", value: 1736 },
+  ],
 };
 
 export function getQuote(ticker: string): SymbolQuote {
@@ -510,9 +547,14 @@ export function getEvents(ticker: string): SymbolEvent[] {
   return eventsMap[ticker] ?? eventsMap.NVDA;
 }
 
-export function getPriceSeries(
-  ticker: string,
-  period: PriceSeriesPeriod,
-): PriceSeriesPoint[] {
-  return priceSeriesMap[ticker]?.[period] ?? priceSeriesMap.NVDA[period];
+export function getSentiment(ticker: string): SymbolSentiment {
+  return sentimentMap[ticker] ?? sentimentMap.NVDA;
+}
+
+export function getTrendNarrative(ticker: string): SymbolTrendNarrative {
+  return trendNarrativeMap[ticker] ?? trendNarrativeMap.NVDA;
+}
+
+export function getPriceSeries(ticker: string): PriceSeriesPoint[] {
+  return priceSeriesMap[ticker] ?? priceSeriesMap.NVDA;
 }

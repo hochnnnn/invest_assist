@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { vi } from "vitest";
@@ -16,6 +16,13 @@ function renderApp(initialEntries: string[]) {
     >
       <App />
     </MemoryRouter>,
+  );
+}
+
+function setEnglishPreferences() {
+  window.localStorage.setItem(
+    "position-manager.preferences",
+    JSON.stringify({ language: "en-US", theme: "light" }),
   );
 }
 
@@ -39,10 +46,13 @@ describe("Position Manager settings and preferences", () => {
   });
 
   it("renders the symbol detail page from the ticker route", () => {
+    setEnglishPreferences();
     renderApp(["/symbol/MSFT"]);
 
-    expect(screen.getByLabelText("MSFT 1D chart")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "1W" })).toBeInTheDocument();
+    expect(screen.getByLabelText("MSFT 1Y chart")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "1W" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Community Sentiment" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Key Metrics" })).not.toBeInTheDocument();
   });
 
   it("opens the settings drawer and closes it with the keyboard", async () => {
@@ -141,7 +151,7 @@ describe("Position Manager settings and preferences", () => {
 
     await user.click(screen.getAllByRole("button", { name: /0700\.HK/i })[0]);
 
-    expect(await screen.findByLabelText("0700.HK 1D chart")).toBeInTheDocument();
+    expect(await screen.findByLabelText("0700.HK 1Y chart")).toBeInTheDocument();
   });
 
   it("switches the active ticker from the persistent watchlist", async () => {
@@ -150,18 +160,81 @@ describe("Position Manager settings and preferences", () => {
 
     await user.click(screen.getByRole("button", { name: /MSFT/i }));
 
-    expect(await screen.findByLabelText("MSFT 1D chart")).toBeInTheDocument();
+    expect(await screen.findByLabelText("MSFT 1Y chart")).toBeInTheDocument();
   });
 
-  it("updates chart selection when changing the period", async () => {
+  it("renders a fixed one-year chart with monthly labels", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/NVDA"]);
+
+    expect(screen.getByLabelText("NVDA 1Y chart")).toBeInTheDocument();
+    expect(screen.getByText("Jun")).toBeInTheDocument();
+    expect(screen.getByText("May")).toBeInTheDocument();
+    expect(screen.queryByText("Mon")).not.toBeInTheDocument();
+  });
+
+  it("keeps only five market stats in the price trend panel", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/NVDA"]);
+    const chartPanel = screen.getByLabelText("NVDA 1Y chart").closest("section");
+
+    expect(chartPanel).not.toBeNull();
+    expect(within(chartPanel!).getByText("942.38")).toBeInTheDocument();
+    expect(within(chartPanel!).getByText("+1.99%")).toBeInTheDocument();
+    expect(within(chartPanel!).getByText("$39.6B")).toBeInTheDocument();
+    expect(within(chartPanel!).getByText("Amplitude")).toBeInTheDocument();
+    expect(within(chartPanel!).getByText("Turnover Rate")).toBeInTheDocument();
+    expect(within(chartPanel!).queryByText("42.8M")).not.toBeInTheDocument();
+    expect(within(chartPanel!).queryByText("926.40")).not.toBeInTheDocument();
+    expect(within(chartPanel!).queryByText("949.80")).not.toBeInTheDocument();
+    expect(within(chartPanel!).queryByText("923.60")).not.toBeInTheDocument();
+  });
+
+  it("removes duplicated price and change from the quote header", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/NVDA"]);
+    const quoteHeader = screen.getByText("NASDAQ").closest("section");
+
+    expect(quoteHeader).not.toBeNull();
+    expect(within(quoteHeader!).getByText("NVIDIA")).toBeInTheDocument();
+    expect(within(quoteHeader!).getByText("NVDA")).toBeInTheDocument();
+    expect(within(quoteHeader!).queryByText("942.38")).not.toBeInTheDocument();
+    expect(within(quoteHeader!).queryByText("+1.99%")).not.toBeInTheDocument();
+  });
+
+  it("renders ticker-specific sentiment content", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/MSFT"]);
+
+    expect(screen.getByText("54")).toBeInTheDocument();
+    expect(screen.getByText("Azure capacity pacing")).toBeInTheDocument();
+    expect(
+      screen.getByText(/enterprise AI monetization converts/i),
+    ).toBeInTheDocument();
+  });
+
+  it("translates the sentiment panel and market stats labels", async () => {
     const user = userEvent.setup();
     renderApp(["/symbol/NVDA"]);
 
-    const weekButton = screen.getByRole("button", { name: "1W" });
-    await user.click(weekButton);
+    await user.click(screen.getByTestId("settings-open"));
+    await user.selectOptions(screen.getByTestId("settings-language-select"), "en-US");
 
-    expect(weekButton).toHaveClass("is-selected");
-    expect(screen.getByText("Mon")).toBeInTheDocument();
-    expect(screen.getByText("Fri")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Community Sentiment" })).toBeInTheDocument();
+    expect(screen.getByText("Market Risk Index")).toBeInTheDocument();
+    expect(screen.getByText("Turnover Rate")).toBeInTheDocument();
+    expect(screen.getByText("Latest Price")).toBeInTheDocument();
+    expect(screen.getByText("Trend Read")).toBeInTheDocument();
+    expect(screen.getByText("AI demand durability")).toBeInTheDocument();
+  });
+
+  it("renders ticker-specific trend narrative copy", () => {
+    setEnglishPreferences();
+    renderApp(["/symbol/MSFT"]);
+
+    expect(screen.getByText("Trend Read")).toBeInTheDocument();
+    expect(
+      screen.getByText(/pullback entries read better than chasing strength/i),
+    ).toBeInTheDocument();
   });
 });

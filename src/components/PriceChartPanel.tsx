@@ -1,18 +1,27 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useI18n } from "../context/SettingsContext";
-import { PriceSeriesPeriod, PriceSeriesPoint, SymbolQuote } from "../types";
+import {
+  PriceSeriesPoint,
+  SymbolFundamentals,
+  SymbolQuote,
+  SymbolTrendNarrative,
+} from "../types";
 
 interface PriceChartPanelProps {
   quote: SymbolQuote;
-  getSeries: (period: PriceSeriesPeriod) => PriceSeriesPoint[];
+  fundamentals: SymbolFundamentals;
+  trendNarrative: SymbolTrendNarrative;
+  getSeries: () => PriceSeriesPoint[];
 }
 
-const periods: PriceSeriesPeriod[] = ["1D", "1W", "1M"];
-
-export function PriceChartPanel({ quote, getSeries }: PriceChartPanelProps) {
-  const [period, setPeriod] = useState<PriceSeriesPeriod>("1D");
+export function PriceChartPanel({
+  quote,
+  fundamentals,
+  trendNarrative,
+  getSeries,
+}: PriceChartPanelProps) {
   const { t } = useI18n();
-  const series = getSeries(period);
+  const series = getSeries();
 
   const chartPath = useMemo(() => {
     const values = series.map((point) => point.value);
@@ -30,6 +39,17 @@ export function PriceChartPanel({ quote, getSeries }: PriceChartPanelProps) {
   }, [series]);
 
   const isPositive = quote.change >= 0;
+  const marketStats = [
+    { label: t("chart.latestPrice"), value: quote.price.toFixed(2) },
+    {
+      label: t("chart.changePercent"),
+      value: `${isPositive ? "+" : ""}${quote.changePercent.toFixed(2)}%`,
+      tone: isPositive ? "price-up" : "price-down",
+    },
+    { label: t("quote.turnover"), value: quote.turnover },
+    { label: t("quote.amplitude"), value: fundamentals.amplitude },
+    { label: t("quote.turnoverRate"), value: fundamentals.turnoverRate },
+  ];
 
   return (
     <section className="panel chart-panel">
@@ -38,32 +58,22 @@ export function PriceChartPanel({ quote, getSeries }: PriceChartPanelProps) {
           <p className="eyebrow">{t("chart.eyebrow")}</p>
           <h2>{t("chart.title")}</h2>
         </div>
-        <div className="period-switcher" role="tablist" aria-label={t("chart.periodSwitcher")}>
-          {periods.map((option) => (
-            <button
-              key={option}
-              type="button"
-              className={period === option ? "is-selected" : ""}
-              onClick={() => setPeriod(option)}
-              aria-pressed={period === option}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="chart-shell">
-        <div className="chart-summary">
-          <span>{t("chart.range")}</span>
-          <strong>
-            {series[0].value.toFixed(2)} - {series[series.length - 1].value.toFixed(2)}
-          </strong>
-          <p className={isPositive ? "price-up" : "price-down"}>
-            {isPositive ? t("chart.aboveClose") : t("chart.belowClose")}
-          </p>
+        <div className="chart-stat-strip">
+          {marketStats.map((stat) => (
+            <div key={stat.label} className="chart-stat-item">
+              <span>{stat.label}</span>
+              <strong className={stat.tone}>{stat.value}</strong>
+            </div>
+          ))}
         </div>
-        <svg viewBox="0 0 100 100" aria-label={`${quote.ticker} ${period} chart`}>
+        <div className="chart-summary">
+          <span>{t("chart.trendSummaryLabel")}</span>
+          <p>{t(trendNarrative.trendSummaryKey)}</p>
+        </div>
+        <svg viewBox="0 0 100 100" aria-label={`${quote.ticker} 1Y chart`}>
           <defs>
             <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor="rgba(52, 115, 246, 0.32)" />

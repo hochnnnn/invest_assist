@@ -293,66 +293,178 @@ const fundamentalsMap: Record<string, SymbolFundamentals> = {
   },
 };
 
+function createPanicHistory(values: number[]): PriceSeriesPoint[] {
+  return values.map((value, index) => ({
+    label: `D${index + 1}`,
+    value,
+  }));
+}
+
 const sentimentMap: Record<string, SymbolSentiment> = {
   NVDA: {
     ticker: "NVDA",
-    summaryKey: "sentiment.nvda.summary",
-    fearGreedLabelKey: "sentiment.fearGreed.greedy",
-    fearGreedScore: 72,
-    trendLabelKey: "sentiment.trend.callBuying",
-    topicKeys: [
-      "sentiment.topic.aiDemand",
-      "sentiment.topic.dataCenterCapex",
-      "sentiment.topic.valuationDebate",
-    ],
+    overall: {
+      stanceKey: "sentiment.overall.optimistic",
+      evidenceKey: "sentiment.nvda.evidence",
+    },
+    distribution: {
+      bullishPercent: 58,
+      cautiousPercent: 24,
+      neutralPercent: 18,
+      bullishViewKeys: [
+        "sentiment.nvda.bullish.1",
+        "sentiment.nvda.bullish.2",
+        "sentiment.nvda.bullish.3",
+      ],
+      bearishViewKeys: [
+        "sentiment.nvda.bearish.1",
+        "sentiment.nvda.bearish.2",
+        "sentiment.nvda.bearish.3",
+      ],
+    },
+    panic: {
+      score: 68,
+      dailyChange: 5,
+      stateKey: "sentiment.panicState.greed",
+      reasonKey: "sentiment.nvda.panicReason",
+      history: createPanicHistory([
+        46, 48, 49, 47, 50, 53, 52, 55, 57, 59,
+        58, 60, 62, 61, 63, 64, 62, 65, 66, 64,
+        67, 68, 66, 69, 70, 68, 67, 69, 71, 68,
+      ]),
+    },
   },
   MSFT: {
     ticker: "MSFT",
-    summaryKey: "sentiment.msft.summary",
-    fearGreedLabelKey: "sentiment.fearGreed.neutral",
-    fearGreedScore: 54,
-    trendLabelKey: "sentiment.trend.waitingGuidance",
-    topicKeys: [
-      "sentiment.topic.enterpriseAI",
-      "sentiment.topic.azureCapacity",
-      "sentiment.topic.marginDiscipline",
-    ],
+    overall: {
+      stanceKey: "sentiment.overall.divided",
+      evidenceKey: "sentiment.msft.evidence",
+    },
+    distribution: {
+      bullishPercent: 37,
+      cautiousPercent: 28,
+      neutralPercent: 35,
+      bullishViewKeys: [
+        "sentiment.msft.bullish.1",
+        "sentiment.msft.bullish.2",
+        "sentiment.msft.bullish.3",
+      ],
+      bearishViewKeys: [
+        "sentiment.msft.bearish.1",
+        "sentiment.msft.bearish.2",
+        "sentiment.msft.bearish.3",
+      ],
+    },
+    panic: {
+      score: 52,
+      dailyChange: -1,
+      stateKey: "sentiment.panicState.neutral",
+      reasonKey: "sentiment.msft.panicReason",
+      history: createPanicHistory([
+        49, 50, 48, 47, 49, 51, 50, 52, 53, 51,
+        50, 49, 51, 52, 54, 55, 53, 52, 54, 55,
+        56, 54, 53, 52, 51, 50, 52, 53, 54, 52,
+      ]),
+    },
   },
   AAPL: {
     ticker: "AAPL",
-    summaryKey: "sentiment.aapl.summary",
-    fearGreedLabelKey: "sentiment.fearGreed.cautious",
-    fearGreedScore: 43,
-    trendLabelKey: "sentiment.trend.mixedViews",
-    topicKeys: [
-      "sentiment.topic.iphoneCycle",
-      "sentiment.topic.servicesMix",
-      "sentiment.topic.chinaDemand",
-    ],
+    overall: {
+      stanceKey: "sentiment.overall.pessimistic",
+      evidenceKey: "sentiment.aapl.evidence",
+    },
+    distribution: {
+      bullishPercent: 24,
+      cautiousPercent: 45,
+      neutralPercent: 31,
+      bullishViewKeys: [
+        "sentiment.aapl.bullish.1",
+        "sentiment.aapl.bullish.2",
+        "sentiment.aapl.bullish.3",
+      ],
+      bearishViewKeys: [
+        "sentiment.aapl.bearish.1",
+        "sentiment.aapl.bearish.2",
+        "sentiment.aapl.bearish.3",
+      ],
+    },
+    panic: {
+      score: 36,
+      dailyChange: -4,
+      stateKey: "sentiment.panicState.fear",
+      reasonKey: "sentiment.aapl.panicReason",
+      history: createPanicHistory([
+        55, 54, 53, 52, 50, 49, 47, 48, 46, 45,
+        43, 44, 42, 41, 39, 38, 37, 36, 35, 34,
+        33, 35, 34, 36, 37, 38, 37, 36, 35, 36,
+      ]),
+    },
   },
   "0700.HK": {
     ticker: "0700.HK",
-    summaryKey: "sentiment.tencent.summary",
-    fearGreedLabelKey: "sentiment.fearGreed.neutral",
-    fearGreedScore: 50,
-    trendLabelKey: "sentiment.trend.recoveryWatch",
-    topicKeys: [
-      "sentiment.topic.gamingPipeline",
-      "sentiment.topic.adRecovery",
-      "sentiment.topic.buybackSupport",
-    ],
+    overall: {
+      stanceKey: "sentiment.overall.optimistic",
+      evidenceKey: "sentiment.tencent.evidence",
+    },
+    distribution: {
+      bullishPercent: 44,
+      cautiousPercent: 23,
+      neutralPercent: 33,
+      bullishViewKeys: [
+        "sentiment.tencent.bullish.1",
+        "sentiment.tencent.bullish.2",
+        "sentiment.tencent.bullish.3",
+      ],
+      bearishViewKeys: [
+        "sentiment.tencent.bearish.1",
+        "sentiment.tencent.bearish.2",
+        "sentiment.tencent.bearish.3",
+      ],
+    },
+    panic: {
+      score: 57,
+      dailyChange: 3,
+      stateKey: "sentiment.panicState.neutral",
+      reasonKey: "sentiment.tencent.panicReason",
+      history: createPanicHistory([
+        42, 43, 44, 46, 45, 47, 48, 49, 48, 50,
+        51, 52, 50, 49, 51, 53, 54, 55, 56, 54,
+        53, 55, 56, 57, 58, 56, 55, 56, 57, 57,
+      ]),
+    },
   },
   "600519.SH": {
     ticker: "600519.SH",
-    summaryKey: "sentiment.moutai.summary",
-    fearGreedLabelKey: "sentiment.fearGreed.steady",
-    fearGreedScore: 61,
-    trendLabelKey: "sentiment.trend.defensivePreference",
-    topicKeys: [
-      "sentiment.topic.channelInventory",
-      "sentiment.topic.festivalDemand",
-      "sentiment.topic.dividendExpectations",
-    ],
+    overall: {
+      stanceKey: "sentiment.overall.divided",
+      evidenceKey: "sentiment.moutai.evidence",
+    },
+    distribution: {
+      bullishPercent: 35,
+      cautiousPercent: 39,
+      neutralPercent: 26,
+      bullishViewKeys: [
+        "sentiment.moutai.bullish.1",
+        "sentiment.moutai.bullish.2",
+        "sentiment.moutai.bullish.3",
+      ],
+      bearishViewKeys: [
+        "sentiment.moutai.bearish.1",
+        "sentiment.moutai.bearish.2",
+        "sentiment.moutai.bearish.3",
+      ],
+    },
+    panic: {
+      score: 41,
+      dailyChange: -2,
+      stateKey: "sentiment.panicState.fear",
+      reasonKey: "sentiment.moutai.panicReason",
+      history: createPanicHistory([
+        52, 51, 50, 49, 48, 47, 46, 45, 44, 43,
+        42, 41, 40, 39, 40, 41, 42, 43, 44, 45,
+        44, 43, 42, 41, 40, 39, 40, 41, 42, 41,
+      ]),
+    },
   },
 };
 
